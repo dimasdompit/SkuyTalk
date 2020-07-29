@@ -30,7 +30,7 @@ const auth = (state = initialState, action) => {
         isLoading: false,
         isError: false,
         isLoggedIn: true,
-        data: action.payload.data,
+        data: action.payload.data.data,
       };
     default:
       return state;

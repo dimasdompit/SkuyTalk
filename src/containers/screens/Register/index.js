@@ -21,16 +21,25 @@ export class Register extends Component {
   }
 
   handleRegister = () => {
-    axios({
-      method: 'POST',
-      url: 'http://192.168.43.84:3000/users/',
-      data: {
-        fullname: this.state.fullname,
-        email: this.state.email,
-        username: this.state.username,
-        password: this.state.password,
-      },
-    })
+    // axios({
+    //   method: 'POST',
+    //   url: 'http://192.168.43.84:3000/users/',
+    //   data: {
+    //     fullname: this.state.fullname,
+    //     email: this.state.email,
+    //     username: this.state.username,
+    //     password: this.state.password,
+    //   },
+    // })
+    const data = {
+      fullname: this.state.fullname,
+      email: this.state.email,
+      username: this.state.username,
+      password: this.state.password,
+    };
+
+    this.props
+      .register(data)
       .then((response) => {
         console.log(response);
         alert('Register Success');
@@ -42,7 +51,6 @@ export class Register extends Component {
   };
 
   render() {
-    console.log(this.props.auth);
     return (
       <View style={styles.container}>
         <View style={styles.topContent}>
@@ -211,9 +219,9 @@ const styles = StyleSheet.create({
   },
 });
 
-const mapStateToProps = {
+const mapStateToProps = (state) => ({
   auth: state.auth,
-};
+});
 
 const mapDispatchToProps = {register};
 
