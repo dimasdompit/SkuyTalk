@@ -6,7 +6,10 @@ import {baseFont} from '../../../styles/baseFont';
 import Logo from '../../../assets/images/skuytalk-logo.png';
 import axios from 'axios';
 
-export class Login extends Component {
+import {connect} from 'react-redux';
+import {register} from '../../../config/redux/actions/auth';
+
+export class Register extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -39,7 +42,7 @@ export class Login extends Component {
   };
 
   render() {
-    console.log(this.state);
+    console.log(this.props.auth);
     return (
       <View style={styles.container}>
         <View style={styles.topContent}>
@@ -208,4 +211,10 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Login;
+const mapStateToProps = {
+  auth: state.auth,
+};
+
+const mapDispatchToProps = {register};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Register);
