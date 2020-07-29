@@ -1,4 +1,5 @@
 import React from 'react';
+import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Fontawesome from 'react-native-vector-icons/FontAwesome';
@@ -13,6 +14,8 @@ import {
 } from '../containers/screens/index';
 import {baseColor} from '../styles/baseColor';
 import {baseFont} from '../styles/baseFont';
+
+import {connect} from 'react-redux';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -82,26 +85,37 @@ const AppNavigator = () => {
   );
 };
 
-const RootContainers = () => {
+const RootContainers = (props) => {
   return (
-    <Stack.Navigator>
-      <Stack.Screen
-        name="Register"
-        component={Register}
-        options={{headerShown: false}}
-      />
-      <Stack.Screen
-        name="Login"
-        component={Login}
-        options={{headerShown: false}}
-      />
-      <Stack.Screen
-        name="AppNavigator"
-        component={AppNavigator}
-        options={{headerShown: false}}
-      />
-    </Stack.Navigator>
+    <NavigationContainer>
+      <Stack.Navigator>
+        {!props.auth.isLoggedIn ? (
+          <>
+            <Stack.Screen
+              name="Login"
+              component={Login}
+              options={{headerShown: false}}
+            />
+            <Stack.Screen
+              name="Register"
+              component={Register}
+              options={{headerShown: false}}
+            />
+          </>
+        ) : (
+          <Stack.Screen
+            name="AppNavigator"
+            component={AppNavigator}
+            options={{headerShown: false}}
+          />
+        )}
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 };
 
-export default RootContainers;
+const mapStateToProps = (state) => ({
+  auth: state.auth,
+});
+
+export default connect(mapStateToProps)(RootContainers);

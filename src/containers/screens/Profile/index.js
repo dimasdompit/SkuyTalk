@@ -4,6 +4,9 @@ import {Image, Button} from 'react-native-elements';
 import {baseColor} from '../../../styles/baseColor';
 import {baseFont} from '../../../styles/baseFont';
 
+import {connect} from 'react-redux';
+import {logout} from '../../../config/redux/actions/auth';
+
 class Profile extends Component {
   constructor(props) {
     super(props);
@@ -19,6 +22,11 @@ class Profile extends Component {
       ],
     };
   }
+
+  handleLogout = () => {
+    this.props.logout();
+  };
+
   render() {
     return (
       <View style={styles.container}>
@@ -28,7 +36,7 @@ class Profile extends Component {
             type="clear"
             title="Sign Out"
             titleStyle={styles.logout}
-            onPress={() => alert('Button Logout')}
+            onPress={this.handleLogout}
           />
         </View>
         <View style={styles.profile}>
@@ -96,4 +104,10 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Profile;
+const mapStateToProps = (state) => ({
+  auth: state.auth,
+});
+
+const mapDispatchToProps = {logout};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Profile);

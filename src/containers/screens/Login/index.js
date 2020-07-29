@@ -4,12 +4,19 @@ import {Input, CheckBox, Button} from 'react-native-elements';
 import {baseColor} from '../../../styles/baseColor';
 import {baseFont} from '../../../styles/baseFont';
 import Logo from '../../../assets/images/skuytalk-logo.png';
+import FlashMessage from 'react-native-flash-message';
+import {showMessage} from 'react-native-flash-message';
+
+import {connect} from 'react-redux';
+import {login} from '../../../config/redux/actions/auth';
 
 export class Login extends Component {
   constructor(props) {
     super(props);
     this.state = {
       checked: true,
+      username: '',
+      password: '',
     };
   }
 
@@ -17,6 +24,39 @@ export class Login extends Component {
     this.setState({
       checked: true,
     });
+  };
+
+  handleLogin = async () => {
+    const data = {
+      username: this.state.username,
+      password: this.state.password,
+    };
+
+    await this.props
+      .login(data)
+      .then((response) => {
+        console.log(response);
+        showMessage({
+          message: `${response.value.data.data.status}`,
+          duration: 3000,
+          type: 'default',
+          icon: 'success',
+          backgroundColor: baseColor.lightgreen,
+          color: baseColor.black,
+        });
+      })
+      .catch((error) => {
+        console.log(error.response);
+        showMessage({
+          message: 'Failed to Sign In',
+          description: `${error.response.data.data}`,
+          duration: 5000,
+          type: 'default',
+          icon: 'danger',
+          backgroundColor: baseColor.danger,
+          color: baseColor.black,
+        });
+      });
   };
 
   render() {
@@ -49,6 +89,7 @@ export class Login extends Component {
                 name: 'user',
                 color: baseColor.grey,
               }}
+              onChangeText={(text) => this.setState({username: text})}
             />
             <Input
               placeholder="Password"
@@ -65,6 +106,7 @@ export class Login extends Component {
                 name: 'lock',
                 color: baseColor.grey,
               }}
+              onChangeText={(text) => this.setState({password: text})}
             />
           </View>
           <View style={styles.forgot}>
@@ -87,7 +129,7 @@ export class Login extends Component {
             containerStyle={styles.btnSignContainer}
             buttonStyle={styles.btnSign}
             titleStyle={styles.btnTitleStyles}
-            onPress={() => this.props.navigation.navigate('AppNavigator')}
+            onPress={this.handleLogin}
           />
           <View style={styles.bottomContent}>
             <Text style={styles.terms}>Don't have an account? </Text>
@@ -100,6 +142,7 @@ export class Login extends Component {
             />
           </View>
         </View>
+        <FlashMessage position="top" />
       </View>
     );
   }
@@ -181,4 +224,10 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Login;
+const mapStateToProps = (state) => ({
+  auth: state.auth,
+});
+
+const mapDispatchToProps = {login};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Login);

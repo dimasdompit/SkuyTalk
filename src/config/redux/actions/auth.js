@@ -16,3 +16,23 @@ export const register = (data) => {
     }),
   };
 };
+
+export const login = (data) => {
+  return {
+    type: 'LOGIN',
+    payload: axios({
+      method: 'POST',
+      url: `${API_URL}/auth/login`,
+      data: {
+        username: data.username,
+        password: data.password,
+      },
+    }),
+  };
+};
+
+export const logout = () => {
+  return {
+    type: 'LOGOUT',
+  };
+};
