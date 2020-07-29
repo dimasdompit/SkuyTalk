@@ -47,7 +47,7 @@ class Profile extends Component {
             color: baseColor.white,
             fontFamily: baseFont.roboto.bold,
           }}
-          onPress={() => alert('Button Edit')}
+          onPress={() => this.props.navigation.navigate('EditProfile')}
         />
       </View>
     );

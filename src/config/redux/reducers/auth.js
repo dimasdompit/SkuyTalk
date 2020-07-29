@@ -33,6 +33,28 @@ const auth = (state = initialState, action) => {
         data: action.payload.data.data,
       };
 
+    case 'PUTUSERS_PENDING':
+      return {
+        ...state,
+        isLoading: true,
+        isError: false,
+        errorMsg: '',
+      };
+    case 'PUTUSERS_REJECTED':
+      return {
+        ...state,
+        isLoading: false,
+        isError: true,
+        errorMsg: 'Data Rejected!',
+      };
+    case 'PUTUSERS_FULFILLED':
+      return {
+        ...state,
+        isLoading: false,
+        isError: false,
+        // data: action.payload.data.data,
+      };
+
     case 'LOGIN_PENDING':
       return {
         ...state,

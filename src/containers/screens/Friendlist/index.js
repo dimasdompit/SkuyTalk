@@ -58,15 +58,18 @@ class Friendlist extends Component {
           <Text style={styles.heading}>Friendlist</Text>
         </View>
         <ScrollView style={styles.middleContent}>
-          {this.state.contact.map((chat) => {
+          {this.state.contact.map((contact) => {
             return (
               <TouchableNativeFeedback
                 onPress={() => this.props.navigation.navigate('FriendProfile')}
                 onLongPress={() => alert('ok')}
-                key={chat.id}
+                key={contact.id}
                 style={styles.friendList}>
-                <Image source={{uri: chat.image}} style={styles.friendPics} />
-                <Text style={styles.friendsName}>{chat.senderName}</Text>
+                <Image
+                  source={{uri: contact.image}}
+                  style={styles.friendPics}
+                />
+                <Text style={styles.friendsName}>{contact.friend_name}</Text>
               </TouchableNativeFeedback>
             );
           })}
