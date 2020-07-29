@@ -4,7 +4,8 @@ import {Input, Button} from 'react-native-elements';
 import {baseColor} from '../../../styles/baseColor';
 import {baseFont} from '../../../styles/baseFont';
 import Logo from '../../../assets/images/skuytalk-logo.png';
-import axios from 'axios';
+import FlashMessage from 'react-native-flash-message';
+import {showMessage} from 'react-native-flash-message';
 
 import {connect} from 'react-redux';
 import {register} from '../../../config/redux/actions/auth';
@@ -21,16 +22,6 @@ export class Register extends Component {
   }
 
   handleRegister = () => {
-    // axios({
-    //   method: 'POST',
-    //   url: 'http://192.168.43.84:3000/users/',
-    //   data: {
-    //     fullname: this.state.fullname,
-    //     email: this.state.email,
-    //     username: this.state.username,
-    //     password: this.state.password,
-    //   },
-    // })
     const data = {
       fullname: this.state.fullname,
       email: this.state.email,
@@ -42,11 +33,30 @@ export class Register extends Component {
       .register(data)
       .then((response) => {
         console.log(response);
-        alert('Register Success');
+        showMessage({
+          message: 'Register Successfully',
+          description: `${response.value.data.data.status}`,
+          duration: 3000,
+          type: 'default',
+          icon: 'success',
+          backgroundColor: baseColor.lightgreen,
+          color: baseColor.black,
+        });
+        setTimeout(() => {
+          this.props.navigation.navigate('Login');
+        }, 3000);
       })
       .catch((error) => {
         console.log(error.response);
-        alert('Register Failed!');
+        showMessage({
+          message: 'Failed to Sign Up',
+          description: `${error.response.data.data}`,
+          duration: 5000,
+          type: 'default',
+          icon: 'danger',
+          backgroundColor: baseColor.danger,
+          color: baseColor.black,
+        });
       });
   };
 
@@ -156,6 +166,7 @@ export class Register extends Component {
             />
           </View>
         </View>
+        <FlashMessage position="top" />
       </View>
     );
   }
