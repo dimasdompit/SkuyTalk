@@ -1,25 +1,45 @@
 import React, {Component} from 'react';
 import {Text, View, StyleSheet, Image} from 'react-native';
-import {Input, CheckBox, Button} from 'react-native-elements';
+import {Input, Button} from 'react-native-elements';
 import {baseColor} from '../../../styles/baseColor';
 import {baseFont} from '../../../styles/baseFont';
 import Logo from '../../../assets/images/skuytalk-logo.png';
+import axios from 'axios';
 
 export class Login extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      checked: true,
+      fullname: '',
+      email: '',
+      username: '',
+      password: '',
     };
   }
 
-  handleCheckbox = (e) => {
-    this.setState({
-      checked: true,
-    });
+  handleRegister = () => {
+    axios({
+      method: 'POST',
+      url: 'http://192.168.43.84:3000/users/',
+      data: {
+        fullname: this.state.fullname,
+        email: this.state.email,
+        username: this.state.username,
+        password: this.state.password,
+      },
+    })
+      .then((response) => {
+        console.log(response);
+        alert('Register Success');
+      })
+      .catch((error) => {
+        console.log(error.response);
+        alert('Register Failed!');
+      });
   };
 
   render() {
+    console.log(this.state);
     return (
       <View style={styles.container}>
         <View style={styles.topContent}>
@@ -44,6 +64,7 @@ export class Login extends Component {
                 fontSize: 16,
               }}
               inputContainerStyle={styles.inputContainer}
+              onChangeText={(text) => this.setState({fullname: text})}
             />
             <Input
               placeholder="Email Address"
@@ -54,6 +75,7 @@ export class Login extends Component {
                 fontSize: 16,
               }}
               inputContainerStyle={styles.inputContainer}
+              onChangeText={(text) => this.setState({email: text})}
             />
             <Input
               placeholder="Username"
@@ -64,6 +86,7 @@ export class Login extends Component {
                 fontSize: 16,
               }}
               inputContainerStyle={styles.inputContainer}
+              onChangeText={(text) => this.setState({username: text})}
             />
             <Input
               placeholder="Password"
@@ -75,6 +98,7 @@ export class Login extends Component {
               }}
               inputContainerStyle={styles.inputContainer}
               secureTextEntry
+              onChangeText={(text) => this.setState({password: text})}
             />
           </View>
           <View style={{justifyContent: 'center', marginTop: 10}}>
@@ -108,7 +132,7 @@ export class Login extends Component {
             containerStyle={styles.btnSignContainer}
             buttonStyle={styles.btnSign}
             titleStyle={styles.btnTitleStyles}
-            onPress={() => alert('sign up button')}
+            onPress={this.handleRegister}
           />
           <View style={styles.bottomContent}>
             <Text style={styles.terms}>Already have an account? </Text>

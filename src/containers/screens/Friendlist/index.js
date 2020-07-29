@@ -76,7 +76,8 @@ class Friendlist extends Component {
           {this.state.chats.map((chat) => {
             return (
               <TouchableNativeFeedback
-                onPress={() => alert(chat.id)}
+                onPress={() => this.props.navigation.navigate('FriendProfile')}
+                onLongPress={() => alert('ok')}
                 key={chat.id}
                 style={styles.friendList}>
                 <Image source={{uri: chat.image}} style={styles.friendPics} />

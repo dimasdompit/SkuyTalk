@@ -9,6 +9,7 @@ import {
   Friendlist,
   Profile,
   PersonalChat,
+  FriendProfile,
 } from '../containers/screens/index';
 import {baseColor} from '../styles/baseColor';
 import {baseFont} from '../styles/baseFont';
@@ -71,6 +72,11 @@ const AppNavigator = () => {
         name="PersonalChat"
         component={PersonalChat}
         options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="FriendProfile"
+        component={FriendProfile}
+        // options={{headerShown: false}}
       />
     </Stack.Navigator>
   );

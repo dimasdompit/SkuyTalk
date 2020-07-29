@@ -1,15 +1,14 @@
 import React, {Component} from 'react';
-import {Text, View, StyleSheet} from 'react-native';
-import {ScaledSheet, vs} from 'react-native-size-matters';
-import {Header, Button, Image} from 'react-native-elements';
+import {Text, View, ScrollView} from 'react-native';
+import {ScaledSheet} from 'react-native-size-matters';
+import {Header, Button, Image, Input} from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {baseColor} from '../../../styles/baseColor';
 import {baseFont} from '../../../styles/baseFont';
-import {scale, verticalScale, moderateScale} from 'react-native-size-matters';
+import {moderateScale} from 'react-native-size-matters';
 import {
   TouchableNativeFeedback,
   TouchableOpacity,
-  ScrollView,
 } from 'react-native-gesture-handler';
 
 // EXTERNAL COMPONENTS
@@ -51,12 +50,27 @@ const Friends = (props) => {
 
 const SenderBalloon = (props) => {
   return (
-    <TouchableOpacity
-      onLongPress={props.onLongPress}
-      style={[styles.senderBalloon, {backgroundColor: baseColor.black}]}>
-      <Text style={styles.senderContent}>{props.message}</Text>
-      <Text style={styles.senderDate}>{props.date}</Text>
-    </TouchableOpacity>
+    <View style={[styles.item, styles.itemIn]}>
+      <TouchableOpacity
+        onLongPress={props.onLongPress}
+        style={[styles.senderBalloon, {backgroundColor: baseColor.black}]}>
+        <Text style={styles.senderContent}>{props.message}</Text>
+        <Text style={styles.senderDate}>{props.date}</Text>
+      </TouchableOpacity>
+    </View>
+  );
+};
+
+const ReceiverBalloon = (props) => {
+  return (
+    <View style={[styles.item, styles.itemOut]}>
+      <TouchableOpacity
+        onLongPress={props.onLongPress}
+        style={[styles.receiverBalloon, {backgroundColor: baseColor.purple}]}>
+        <Text style={styles.receiverContent}>{props.message}</Text>
+        <Text style={styles.receiverDate}>{props.date}</Text>
+      </TouchableOpacity>
+    </View>
   );
 };
 
@@ -67,7 +81,7 @@ export class PersonalChat extends Component {
     this.state = {
       users: [
         {
-          id: 1,
+          id: 4,
           image: `https://1.bp.blogspot.com/-SVIVQu7cH1U/XLu0gg-XbHI/AAAAAAAAN6E/u-Rsd-kSYekcWR0IpbHeyUWW4aJ5LM1PQCLcBGAs/s2560/pubg-4k-game-sw-2048x2048.jpg`,
           senderName: `Farhana`,
         },
@@ -75,22 +89,22 @@ export class PersonalChat extends Component {
       chats: [
         {
           id: 1,
-          sender: 'Farhana',
-          receiver: 'Dimas',
+          sender_id: 'Farhana',
+          receiver_id: 'Dimas',
           content: 'Kamu lagi apa?',
           date: '18:00',
         },
         {
           id: 2,
-          sender: 'Dimas',
-          receiver: 'Farhana',
+          sender_id: 'Farhana',
+          receiver_id: 'Dimas',
           content: 'Lagi Main',
           date: '18:10',
         },
         {
           id: 3,
-          sender: 'Farhana',
-          receiver: 'Dimas',
+          sender_id: 'Farhana',
+          receiver_id: 'Dimas',
           content: 'Main apa?',
           date: '18:30',
         },
@@ -110,41 +124,57 @@ export class PersonalChat extends Component {
             <Friends
               image={this.state.users[0].image}
               name={this.state.users[0].senderName}
-              onPress={() => alert('Friends Profile')}
+              onPress={() => this.props.navigation.navigate('FriendProfile')}
             />
           }
         />
-        <View style={styles.container}>
-          <View style={[styles.item, styles.itemIn]}>
-            <SenderBalloon
-              message="Kamu lagi apa?"
-              date="18:00"
-              onLongPress={() => alert('sender message')}
-            />
-          </View>
-          {this.state.chats.map((chat) => {
-            console.log(chat.sender);
-            {
-              chat.sender === this.state.users[0].senderName ? (
-                <View key={chat.id} style={[styles.item, styles.itemIn]}>
-                  <SenderBalloon
-                    message={chat.content}
-                    date={chat.date}
-                    onLongPress={() => alert('sender message')}
-                  />
-                </View>
-              ) : (
-                <Text>Hello Abang abang</Text>
-              );
-            }
-          })}
-        </View>
+        <ScrollView style={styles.container}>
+          <SenderBalloon
+            message="Kamu lagi apa?"
+            date="00:00"
+            onLongPress={() => alert('sender message')}
+          />
+          <SenderBalloon
+            message="CEPET BALES!!!"
+            date="00:00"
+            onLongPress={() => alert('sender message')}
+          />
+          <ReceiverBalloon
+            message="Lagi ena ena"
+            date="00:00"
+            onLongPress={() => alert('sender message')}
+          />
+        </ScrollView>
         <View
           style={{
-            backgroundColor: 'green',
             maxHeight: moderateScale(250, 2),
+            paddingHorizontal: 10,
+            flexDirection: 'row',
+            backgroundColor: baseColor.dark,
           }}>
-          <Text>Hei</Text>
+          <Input
+            placeholder="Send message"
+            placeholderTextColor={baseColor.grey}
+            inputStyle={{
+              color: baseColor.white,
+              fontFamily: baseFont.roboto.regular,
+            }}
+            containerStyle={{
+              flex: 1,
+              backgroundColor: baseColor.dark,
+            }}
+          />
+          <Button
+            containerStyle={{
+              alignSelf: 'center',
+              paddingHorizontal: 10,
+              paddingRight: 10,
+              backgroundColor: baseColor.dark,
+            }}
+            buttonStyle={{backgroundColor: baseColor.purple}}
+            icon={<Icon name="send" size={20} color="white" />}
+            onPress={() => alert('button send')}
+          />
         </View>
       </>
     );
@@ -156,7 +186,6 @@ const styles = ScaledSheet.create({
     paddingTop: 20,
     flex: 1,
     backgroundColor: baseColor.darkGrey,
-    paddingHorizontal: 5,
   },
   item: {
     marginVertical: moderateScale(3, 2),
@@ -183,6 +212,26 @@ const styles = ScaledSheet.create({
     marginRight: 5,
   },
   senderDate: {
+    justifyContent: 'flex-end',
+    alignSelf: 'flex-end',
+    color: baseColor.grey,
+    fontFamily: baseFont.roboto.bold,
+    fontSize: 12,
+  },
+  receiverBalloon: {
+    maxWidth: moderateScale(250, 2),
+    paddingHorizontal: moderateScale(10, 2),
+    paddingTop: moderateScale(5, 2),
+    paddingBottom: moderateScale(7, 2),
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    borderBottomLeftRadius: 20,
+  },
+  receiverContent: {
+    color: baseColor.black,
+    marginRight: 5,
+  },
+  receiverDate: {
     justifyContent: 'flex-end',
     alignSelf: 'flex-end',
     color: baseColor.grey,
