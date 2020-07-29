@@ -3,6 +3,7 @@ import {Text, View, StyleSheet} from 'react-native';
 import {Image, Button} from 'react-native-elements';
 import {baseColor} from '../../../styles/baseColor';
 import {baseFont} from '../../../styles/baseFont';
+import {API_URL} from '@env';
 
 import {connect} from 'react-redux';
 import {logout} from '../../../config/redux/actions/auth';
@@ -11,15 +12,7 @@ class Profile extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      users: [
-        {
-          id: 1,
-          image:
-            'https://vignette.wikia.nocookie.net/kiminonawa/images/6/68/Mitsuha_Miyamizu_2022.png/revision/latest/scale-to-width-down/340?cb=20181114193911',
-          senderName: 'Farhana Isabella',
-          map: `Jakarta, Indonesia`,
-        },
-      ],
+      users: this.props.auth.data,
     };
   }
 
@@ -41,11 +34,11 @@ class Profile extends Component {
         </View>
         <View style={styles.profile}>
           <Image
-            source={{uri: this.state.users[0].image}}
+            source={{uri: `${API_URL}/images/${this.state.users.image}`}}
             style={styles.image}
           />
-          <Text style={styles.name}>{this.state.users[0].senderName}</Text>
-          <Text style={styles.map}>{this.state.users[0].map}</Text>
+          <Text style={styles.name}>{this.state.users.fullname}</Text>
+          {/* <Text style={styles.map}>{this.state.users.map}</Text> */}
         </View>
         <Button
           title="Edit Profile"

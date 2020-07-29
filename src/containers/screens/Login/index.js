@@ -36,14 +36,14 @@ export class Login extends Component {
       .login(data)
       .then((response) => {
         console.log(response);
-        showMessage({
-          message: `${response.value.data.data.status}`,
-          duration: 3000,
-          type: 'default',
-          icon: 'success',
-          backgroundColor: baseColor.lightgreen,
-          color: baseColor.black,
-        });
+        // showMessage({
+        //   message: `${response.value.data.data.status}`,
+        //   duration: 3000,
+        //   type: 'default',
+        //   icon: 'success',
+        //   backgroundColor: baseColor.lightgreen,
+        //   color: baseColor.black,
+        // });
       })
       .catch((error) => {
         console.log(error.response);

@@ -5,51 +5,36 @@ import {baseFont} from '../../../styles/baseFont';
 import {SearchBar, Image} from 'react-native-elements';
 import {TouchableNativeFeedback} from 'react-native-gesture-handler';
 
+import {connect} from 'react-redux';
+import {getAllContact} from '../../../config/redux/actions/contact';
+
 class Friendlist extends Component {
   constructor(props) {
     super(props);
     this.state = {
       search: '',
-      chats: [
-        {
-          id: 1,
-          image:
-            'https://1.bp.blogspot.com/-SVIVQu7cH1U/XLu0gg-XbHI/AAAAAAAAN6E/u-Rsd-kSYekcWR0IpbHeyUWW4aJ5LM1PQCLcBGAs/s2560/pubg-4k-game-sw-2048x2048.jpg',
-          senderName: 'Dompit Gantenk pake K',
-        },
-        {
-          id: 2,
-          image:
-            'https://resize.cdn.otakumode.com/ex/350.350/shop/product/033c21499a3a43c0acdc8c18470fab31.jpg',
-          senderName: 'Naruto Uzumaki',
-        },
-        {
-          id: 3,
-          image:
-            'https://i.pinimg.com/originals/ec/38/87/ec3887d7bbde69a98dd424ce434f9250.jpg',
-          senderName: 'Lisa BlekPing',
-        },
-        {
-          id: 4,
-          image:
-            'https://id-test-11.slatic.net/p/95da2d3d51ec76c0aed25f9277aa7d8c.jpg_720x720q80.jpg_.webp',
-          senderName: 'Tony Stark',
-        },
-        {
-          id: 5,
-          image:
-            'https://pbs.twimg.com/profile_images/3085541511/a2cff5090fa9d8da848a4c01facf0ee5.jpeg',
-          senderName: 'Tukang Tikung Temen',
-        },
-        {
-          id: 6,
-          image:
-            'https://resize.cdn.otakumode.com/ex/350.350/shop/product/033c21499a3a43c0acdc8c18470fab31.jpg',
-          senderName: 'Admin Jastip',
-        },
-      ],
+      contact: [],
     };
   }
+
+  showAllContact = async () => {
+    const token = this.props.auth.data.token;
+    await this.props
+      .getAllContact(token)
+      .then((response) => {
+        this.setState({
+          contact: this.props.contact.data,
+        });
+      })
+      .catch((error) => {
+        console.log(error.response);
+      });
+  };
+
+  componentDidMount() {
+    this.showAllContact();
+  }
+
   render() {
     return (
       <View style={styles.mainContainer}>
@@ -73,7 +58,7 @@ class Friendlist extends Component {
           <Text style={styles.heading}>Friendlist</Text>
         </View>
         <ScrollView style={styles.middleContent}>
-          {this.state.chats.map((chat) => {
+          {this.state.contact.map((chat) => {
             return (
               <TouchableNativeFeedback
                 onPress={() => this.props.navigation.navigate('FriendProfile')}
@@ -126,4 +111,11 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Friendlist;
+const mapStateToProps = (state) => ({
+  auth: state.auth,
+  contact: state.contact,
+});
+
+const mapDispatchToProps = {getAllContact};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Friendlist);

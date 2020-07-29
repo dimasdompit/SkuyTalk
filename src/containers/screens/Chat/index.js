@@ -4,71 +4,36 @@ import {baseColor} from '../../../styles/baseColor';
 import {baseFont} from '../../../styles/baseFont';
 import {SearchBar, Image} from 'react-native-elements';
 import {TouchableNativeFeedback} from 'react-native-gesture-handler';
+import {API_URL} from '@env';
+
+import {connect} from 'react-redux';
+import {getChats} from '../../../config/redux/actions/chat';
 
 class Chat extends Component {
   constructor(props) {
     super(props);
     this.state = {
       search: '',
-      chats: [
-        {
-          id: 1,
-          image:
-            'https://1.bp.blogspot.com/-SVIVQu7cH1U/XLu0gg-XbHI/AAAAAAAAN6E/u-Rsd-kSYekcWR0IpbHeyUWW4aJ5LM1PQCLcBGAs/s2560/pubg-4k-game-sw-2048x2048.jpg',
-          senderName: 'Dompit Gantenk pake K',
-          content: `WOOOYYYY`,
-          date: '16:30',
-        },
-        {
-          id: 2,
-          image:
-            'https://resize.cdn.otakumode.com/ex/350.350/shop/product/033c21499a3a43c0acdc8c18470fab31.jpg',
-          senderName: 'Naruto Uzumaki',
-          content: `Gantiin jadi hokage sini. CEPET!!!`,
-          date: '18:30',
-        },
-        {
-          id: 3,
-          image:
-            'https://i.pinimg.com/originals/ec/38/87/ec3887d7bbde69a98dd424ce434f9250.jpg',
-          senderName: 'Lisa BlekPing',
-          content: `Jadi beli cuangki gak?`,
-          date: '00:00',
-        },
-        {
-          id: 4,
-          image:
-            'https://id-test-11.slatic.net/p/95da2d3d51ec76c0aed25f9277aa7d8c.jpg_720x720q80.jpg_.webp',
-          senderName: 'Tony Stark',
-          content: `Besok aja deh ya`,
-          date: '21:17',
-        },
-        {
-          id: 5,
-          image:
-            'https://pbs.twimg.com/profile_images/3085541511/a2cff5090fa9d8da848a4c01facf0ee5.jpeg',
-          senderName: 'Tukang Tikung Temen',
-          content: `Ayooooo laaaahhh`,
-          date: '02:00',
-        },
-        {
-          id: 6,
-          image:
-            'https://resize.cdn.otakumode.com/ex/350.350/shop/product/033c21499a3a43c0acdc8c18470fab31.jpg',
-          senderName: 'Admin Jastip',
-          content: `Lorem ipsum dolor sit amet consectetur, adipisicing elit. A esse, molestiae qui, aut adipisci obcaecati praesentium enim id dolorem voluptas porro eveniet voluptatum, laboriosam vitae? Maiores omnis recusandae possimus fugit.`,
-          date: '18:30',
-        },
-        {
-          id: 7,
-          image:
-            'https://resize.cdn.otakumode.com/ex/350.350/shop/product/033c21499a3a43c0acdc8c18470fab31.jpg',
-          senderName: 'Admin Jastip',
-          content: `Lorem ipsum dolor sit amet consectetur, adipisicing elit. A esse, molestiae qui, aut adipisci obcaecati praesentium enim id dolorem voluptas porro eveniet voluptatum, laboriosam vitae? Maiores omnis recusandae possimus fugit.`,
-          date: '18:30',
-        },
-      ],
+      chats: [],
     };
+  }
+
+  getChats = async () => {
+    const token = this.props.auth.data.token;
+
+    await this.props
+      .getChats(token)
+      .then((response) => {
+        console.log(response);
+        this.setState({
+          chats: this.props.chat.data,
+        });
+      })
+      .catch((error) => console.log(error));
+  };
+
+  componentDidMount() {
+    this.getChats();
   }
 
   handleSearch = (search) => {
@@ -76,6 +41,7 @@ class Chat extends Component {
   };
 
   render() {
+    console.log(this.props.chat);
     return (
       <View style={styles.mainContainer}>
         <View style={styles.topContent}>
@@ -102,12 +68,17 @@ class Chat extends Component {
           {this.state.chats.map((chat) => {
             return (
               <TouchableNativeFeedback
-                onPress={() => this.props.navigation.navigate('PersonalChat')}
+                onPress={() =>
+                  this.props.navigation.navigate('PersonalChat', {id: chat.id})
+                }
                 key={chat.id}
                 style={styles.friendsChat}>
-                <Image source={{uri: chat.image}} style={styles.friendPics} />
+                <Image
+                  source={{uri: `${API_URL}/images/${chat.sender_image}`}}
+                  style={styles.friendPics}
+                />
                 <View style={styles.friendsMessage}>
-                  <Text style={styles.friendsName}>{chat.senderName}</Text>
+                  <Text style={styles.friendsName}>{chat.sender_name}</Text>
                   <Text style={styles.chatContent}>
                     {chat.content.length < 31
                       ? chat.content
@@ -178,4 +149,11 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Chat;
+const mapStateToProps = (state) => ({
+  auth: state.auth,
+  chat: state.chat,
+});
+
+const mapDispatchToProps = {getChats};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Chat);
