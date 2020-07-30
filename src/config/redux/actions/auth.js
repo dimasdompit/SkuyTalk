@@ -1,6 +1,20 @@
 import axios from 'axios';
 import {API_URL} from '@env';
 
+export const login = (data) => {
+  return {
+    type: 'LOGIN',
+    payload: axios({
+      method: 'POST',
+      url: `${API_URL}/auth/login`,
+      data: {
+        username: data.username,
+        password: data.password,
+      },
+    }),
+  };
+};
+
 export const register = (data) => {
   return {
     type: 'REGISTER',
@@ -10,20 +24,6 @@ export const register = (data) => {
       data: {
         fullname: data.fullname,
         email: data.email,
-        username: data.username,
-        password: data.password,
-      },
-    }),
-  };
-};
-
-export const login = (data) => {
-  return {
-    type: 'LOGIN',
-    payload: axios({
-      method: 'POST',
-      url: `${API_URL}/auth/login`,
-      data: {
         username: data.username,
         password: data.password,
       },

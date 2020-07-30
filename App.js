@@ -27,7 +27,7 @@ const App = () => {
     <Provider store={store}>
       <PersistGate persistor={persistor}>
         <Routes />
-        <FlashMessage position="center" />
+        <FlashMessage position="top" />
       </PersistGate>
     </Provider>
   );

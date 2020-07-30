@@ -33,7 +33,7 @@ export class Register extends Component {
       .then((response) => {
         console.log(response);
         showMessage({
-          message: 'Register Successfully',
+          message: 'Success!',
           description: `${response.value.data.data.status}`,
           duration: 3000,
           type: 'default',
