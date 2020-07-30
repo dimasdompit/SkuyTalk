@@ -4,7 +4,6 @@ import {Input, Button} from 'react-native-elements';
 import {baseColor} from '../../../styles/baseColor';
 import {baseFont} from '../../../styles/baseFont';
 import Logo from '../../../assets/images/skuytalk-logo.png';
-import FlashMessage from 'react-native-flash-message';
 import {showMessage} from 'react-native-flash-message';
 
 import {connect} from 'react-redux';
@@ -166,7 +165,6 @@ export class Register extends Component {
             />
           </View>
         </View>
-        <FlashMessage position="top" />
       </View>
     );
   }

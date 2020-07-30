@@ -46,7 +46,7 @@ const ChatTab = (props) => {
         options={{
           tabBarLabel: 'Friendlist',
           tabBarIcon: ({color, size}) => (
-            <Fontawesome name="users" color={color} size={size} />
+            <Fontawesome name="address-book" color={color} size={size} />
           ),
         }}
       />
@@ -56,7 +56,7 @@ const ChatTab = (props) => {
         options={{
           tabBarLabel: 'Profile',
           tabBarIcon: ({color, size}) => (
-            <Fontawesome name="cog" color={color} size={size} />
+            <Fontawesome name="user" color={color} size={size} />
           ),
         }}
       />
@@ -95,7 +95,13 @@ const RootContainers = (props) => {
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        {!props.auth.isLoggedIn ? (
+        {props.auth.isLoggedIn ? (
+          <Stack.Screen
+            name="AppNavigator"
+            component={AppNavigator}
+            options={{headerShown: false}}
+          />
+        ) : (
           <>
             <Stack.Screen
               name="Login"
@@ -108,12 +114,6 @@ const RootContainers = (props) => {
               options={{headerShown: false}}
             />
           </>
-        ) : (
-          <Stack.Screen
-            name="AppNavigator"
-            component={AppNavigator}
-            options={{headerShown: false}}
-          />
         )}
       </Stack.Navigator>
     </NavigationContainer>

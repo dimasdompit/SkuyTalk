@@ -17,22 +17,6 @@ export const register = (data) => {
   };
 };
 
-export const putUsers = (token, id, data) => {
-  return {
-    type: 'PUTUSERS',
-    payload: axios({
-      method: 'PUT',
-      url: `${API_URL}/users/${id}`,
-      data: data,
-      headers: {
-        Authorization: token,
-        Accept: 'application/json',
-        'Content-Type': 'multipart/form-data',
-      },
-    }),
-  };
-};
-
 export const login = (data) => {
   return {
     type: 'LOGIN',
@@ -46,6 +30,22 @@ export const login = (data) => {
     }),
   };
 };
+
+// export const putUsers = (token, id, data) => {
+//   return {
+//     type: 'PUTUSERS',
+//     payload: axios({
+//       method: 'PUT',
+//       url: `${API_URL}/users/${id}`,
+//       data: data,
+//       headers: {
+//         Authorization: token,
+//         Accept: 'application/json',
+//         'Content-Type': 'multipart/form-data',
+//       },
+//     }),
+//   };
+// };
 
 export const logout = () => {
   return {

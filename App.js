@@ -14,6 +14,8 @@ import {PersistGate} from 'redux-persist/integration/react';
 import storage from './src/config/redux/store';
 import Routes from './src/routes/index';
 
+import FlashMessage from 'react-native-flash-message';
+
 const App = () => {
   useEffect(() => {
     SplashScreen.hide();
@@ -25,6 +27,7 @@ const App = () => {
     <Provider store={store}>
       <PersistGate persistor={persistor}>
         <Routes />
+        <FlashMessage position="center" />
       </PersistGate>
     </Provider>
   );
