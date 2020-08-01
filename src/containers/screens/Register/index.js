@@ -153,6 +153,7 @@ export class Register extends Component {
             buttonStyle={styles.btnSign}
             titleStyle={styles.btnTitleStyles}
             onPress={this.handleRegister}
+            // loading={this.props.auth.isLoading}
           />
           <View style={styles.bottomContent}>
             <Text style={styles.terms}>Already have an account? </Text>
@@ -161,7 +162,7 @@ export class Register extends Component {
               type="clear"
               buttonStyle={{alignSelf: 'center'}}
               titleStyle={{color: baseColor.purple}}
-              onPress={() => this.props.navigation.navigate('Login')}
+              onPress={() => this.props.navigation.replace('Login')}
             />
           </View>
         </View>

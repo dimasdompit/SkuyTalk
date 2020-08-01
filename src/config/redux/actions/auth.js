@@ -1,12 +1,12 @@
 import axios from 'axios';
-import {API_URL} from '@env';
+import {BASE_API_URL} from '@env';
 
 export const login = (data) => {
   return {
     type: 'LOGIN',
     payload: axios({
       method: 'POST',
-      url: `${API_URL}/auth/login`,
+      url: `${BASE_API_URL}/auth/login`,
       data: {
         username: data.username,
         password: data.password,
@@ -20,7 +20,7 @@ export const register = (data) => {
     type: 'REGISTER',
     payload: axios({
       method: 'POST',
-      url: `${API_URL}/users`,
+      url: `${BASE_API_URL}/users`,
       data: {
         fullname: data.fullname,
         email: data.email,

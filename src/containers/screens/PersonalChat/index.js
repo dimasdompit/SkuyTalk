@@ -10,6 +10,11 @@ import {
   TouchableNativeFeedback,
   TouchableOpacity,
 } from 'react-native-gesture-handler';
+import {API_URL} from '@env';
+
+import {connect} from 'react-redux';
+import {getUsersById} from '../../../config/redux/actions/users';
+import {showAllChats} from '../../../config/redux/actions/chat';
 
 // EXTERNAL COMPONENTS
 const ButtonBack = ({onPress}) => {
@@ -32,7 +37,7 @@ const Friends = (props) => {
         alignItems: 'center',
       }}>
       <Image
-        source={{uri: props.image}}
+        source={{uri: `${API_URL}/images/${props.image}`}}
         style={{height: 50, width: 50, borderRadius: 50}}
       />
       <Text
@@ -79,39 +84,49 @@ export class PersonalChat extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      users: [
-        {
-          id: 4,
-          image: `https://1.bp.blogspot.com/-SVIVQu7cH1U/XLu0gg-XbHI/AAAAAAAAN6E/u-Rsd-kSYekcWR0IpbHeyUWW4aJ5LM1PQCLcBGAs/s2560/pubg-4k-game-sw-2048x2048.jpg`,
-          senderName: `Farhana`,
-        },
-      ],
-      chats: [
-        {
-          id: 1,
-          sender_id: 'Farhana',
-          receiver_id: 'Dimas',
-          content: 'Kamu lagi apa?',
-          date: '18:00',
-        },
-        {
-          id: 2,
-          sender_id: 'Farhana',
-          receiver_id: 'Dimas',
-          content: 'Lagi Main',
-          date: '18:10',
-        },
-        {
-          id: 3,
-          sender_id: 'Farhana',
-          receiver_id: 'Dimas',
-          content: 'Main apa?',
-          date: '18:30',
-        },
-      ],
+      users: [],
+      chats: [],
     };
   }
+
+  getUsers = async () => {
+    const token = this.props.auth.data.token;
+    const id = this.props.auth.data.id;
+
+    await this.props
+      .getUsersById(token, id)
+      .then((response) => {
+        this.setState({
+          users: this.props.users.data,
+        });
+      })
+      .catch((error) => {
+        console.log(error.response);
+      });
+  };
+
+  showChats = async () => {
+    const token = this.props.auth.data.token;
+
+    await this.props
+      .showAllChats(token)
+      .then((response) => {
+        this.setState({
+          chats: this.props.chat.data,
+        });
+      })
+      .catch((error) => {
+        console.log(error.response);
+      });
+  };
+
+  componentDidMount() {
+    this.getUsers();
+    this.showChats();
+  }
+
   render() {
+    console.log(this.state.users);
     return (
       <>
         <Header
@@ -120,35 +135,44 @@ export class PersonalChat extends Component {
           leftComponent={
             <ButtonBack onPress={() => this.props.navigation.goBack()} />
           }
-          centerComponent={
-            <Friends
-              image={this.state.users[0].image}
-              name={this.state.users[0].senderName}
-              onPress={() => this.props.navigation.navigate('FriendProfile')}
-            />
-          }
+          // centerComponent={
+          //   <Friends
+          //     image={this.state.users[0].image}
+          //     name={this.state.users[0].senderName}
+          //     onPress={() => this.props.navigation.navigate('FriendProfile')}
+          //   />
+          // }
         />
         <ScrollView style={styles.container}>
-          <SenderBalloon
-            message="Kamu lagi apa?"
-            date="00:00"
-            onLongPress={() => alert('sender message')}
-          />
-          <SenderBalloon
-            message="CEPET BALES!!!"
-            date="00:00"
-            onLongPress={() => alert('sender message')}
-          />
-          <ReceiverBalloon
+          {this.state.chats.map((chat) => {
+            {
+              chat.receiver_name !== this.props.auth.data.fullname ? (
+                <SenderBalloon
+                  key={chat.id}
+                  message={chat.content}
+                  date={chat.date}
+                  // onLongPress={() => alert('sender message')}
+                />
+              ) : (
+                <ReceiverBalloon
+                  key={chat.id}
+                  message={chat.content}
+                  date={chat.date}
+                  onLongPress={() => alert('sender message')}
+                />
+              );
+            }
+          })}
+          {/* <ReceiverBalloon
             message="Lagi ena ena"
             date="00:00"
             onLongPress={() => alert('sender message')}
-          />
+          /> */}
         </ScrollView>
         <View
           style={{
-            maxHeight: moderateScale(250, 2),
-            paddingHorizontal: 10,
+            // maxHeight: moderateScale(250, 2),
+            // paddingHorizontal: 10,
             flexDirection: 'row',
             backgroundColor: baseColor.dark,
           }}>
@@ -190,6 +214,7 @@ const styles = ScaledSheet.create({
   item: {
     marginVertical: moderateScale(3, 2),
     flexDirection: 'row',
+    // marginBottom: 80,
   },
   itemIn: {
     marginLeft: 20,
@@ -240,4 +265,12 @@ const styles = ScaledSheet.create({
   },
 });
 
-export default PersonalChat;
+const mapStateToProps = (state) => ({
+  auth: state.auth,
+  users: state.users,
+  chat: state.chat,
+});
+
+const mapDispatchToProps = {getUsersById, showAllChats};
+
+export default connect(mapStateToProps, mapDispatchToProps)(PersonalChat);

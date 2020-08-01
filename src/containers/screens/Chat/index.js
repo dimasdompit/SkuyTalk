@@ -1,10 +1,16 @@
 import React, {Component} from 'react';
-import {Text, View, StyleSheet, ScrollView} from 'react-native';
+import {
+  Text,
+  View,
+  StyleSheet,
+  ScrollView,
+  ActivityIndicator,
+} from 'react-native';
 import {baseColor} from '../../../styles/baseColor';
 import {baseFont} from '../../../styles/baseFont';
 import {SearchBar, Image} from 'react-native-elements';
 import {TouchableNativeFeedback} from 'react-native-gesture-handler';
-import {API_URL} from '@env';
+import {BASE_API_URL} from '@env';
 
 import {connect} from 'react-redux';
 import {getChats} from '../../../config/redux/actions/chat';
@@ -41,7 +47,6 @@ class Chat extends Component {
   };
 
   render() {
-    console.log(this.props.chat);
     return (
       <View style={styles.mainContainer}>
         <View style={styles.topContent}>
@@ -65,20 +70,34 @@ class Chat extends Component {
           <Text style={styles.notifHeading}>You have 2 new messages</Text>
         </View>
         <ScrollView style={styles.middleContent}>
+          {this.props.chat.isLoading && (
+            <ActivityIndicator
+              style={{
+                flex: 1,
+                justifyContent: 'center',
+                alignSelf: 'center',
+                marginTop: 150,
+              }}
+              size="large"
+              color={baseColor.white}
+            />
+          )}
           {this.state.chats.map((chat) => {
             return (
               <TouchableNativeFeedback
                 onPress={() =>
-                  this.props.navigation.navigate('PersonalChat', {id: chat.id})
+                  this.props.navigation.navigate('PersonalChat', {
+                    id: chat.id,
+                  })
                 }
                 key={chat.id}
                 style={styles.friendsChat}>
                 <Image
-                  source={{uri: `${API_URL}/images/${chat.sender_image}`}}
+                  source={{uri: `${BASE_API_URL}/images/${chat.image}`}}
                   style={styles.friendPics}
                 />
                 <View style={styles.friendsMessage}>
-                  <Text style={styles.friendsName}>{chat.sender_name}</Text>
+                  <Text style={styles.friendsName}>{chat.fullname}</Text>
                   <Text style={styles.chatContent}>
                     {chat.content.length < 31
                       ? chat.content

@@ -21,6 +21,23 @@ import {connect} from 'react-redux';
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
+const ProfileStack = (props) => {
+  return (
+    <Stack.Navigator initialRouteName="Profile">
+      <Stack.Screen
+        name="Profile"
+        component={Profile}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="EditProfile"
+        component={EditProfile}
+        options={{headerShown: false}}
+      />
+    </Stack.Navigator>
+  );
+};
+
 const ChatTab = (props) => {
   return (
     <Tab.Navigator
@@ -51,8 +68,8 @@ const ChatTab = (props) => {
         }}
       />
       <Tab.Screen
-        name="Profile"
-        component={Profile}
+        name="ProfileStack"
+        component={ProfileStack}
         options={{
           tabBarLabel: 'Profile',
           tabBarIcon: ({color, size}) => (
@@ -82,11 +99,11 @@ const AppNavigator = () => {
         component={FriendProfile}
         // options={{headerShown: false}}
       />
-      <Stack.Screen
+      {/* <Stack.Screen
         name="EditProfile"
         component={EditProfile}
         options={{headerShown: false, headerBackground: baseColor.dark}}
-      />
+      /> */}
     </Stack.Navigator>
   );
 };
@@ -104,13 +121,13 @@ const RootContainers = (props) => {
         ) : (
           <>
             <Stack.Screen
-              name="Register"
-              component={Register}
+              name="Login"
+              component={Login}
               options={{headerShown: false}}
             />
             <Stack.Screen
-              name="Login"
-              component={Login}
+              name="Register"
+              component={Register}
               options={{headerShown: false}}
             />
           </>

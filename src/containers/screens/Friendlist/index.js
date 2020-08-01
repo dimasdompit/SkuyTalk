@@ -1,5 +1,11 @@
 import React, {Component} from 'react';
-import {Text, View, StyleSheet, ScrollView} from 'react-native';
+import {
+  Text,
+  View,
+  StyleSheet,
+  ScrollView,
+  ActivityIndicator,
+} from 'react-native';
 import {baseColor} from '../../../styles/baseColor';
 import {baseFont} from '../../../styles/baseFont';
 import {SearchBar, Image} from 'react-native-elements';
@@ -58,6 +64,18 @@ class Friendlist extends Component {
           <Text style={styles.heading}>Friendlist</Text>
         </View>
         <ScrollView style={styles.middleContent}>
+          {this.props.contact.isLoading && (
+            <ActivityIndicator
+              style={{
+                flex: 1,
+                justifyContent: 'center',
+                alignSelf: 'center',
+                marginTop: 150,
+              }}
+              size="large"
+              color={baseColor.white}
+            />
+          )}
           {this.state.contact.map((contact) => {
             return (
               <TouchableNativeFeedback
@@ -69,7 +87,7 @@ class Friendlist extends Component {
                   source={{uri: contact.image}}
                   style={styles.friendPics}
                 />
-                <Text style={styles.friendsName}>{contact.friend_name}</Text>
+                <Text style={styles.friendsName}>{contact.friend_id}</Text>
               </TouchableNativeFeedback>
             );
           })}

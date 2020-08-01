@@ -1,22 +1,46 @@
 import React, {Component} from 'react';
-import {Text, View, StyleSheet} from 'react-native';
+import {View, StyleSheet} from 'react-native';
 import {Input, Image, Button} from 'react-native-elements';
 import {baseColor} from '../../../styles/baseColor';
 import {baseFont} from '../../../styles/baseFont';
 import ImagePicker from 'react-native-image-picker';
-import {API_URL} from '@env';
+import {withNavigation} from '@react-navigation/compat';
+import {showMessage} from 'react-native-flash-message';
+import {BASE_API_URL} from '@env';
 
 import {connect} from 'react-redux';
-import {putUsers} from '../../../config/redux/actions/auth';
+import {getUsersById, putUsers} from '../../../config/redux/actions/users';
 
 class EditProfile extends Component {
   constructor(props) {
     super(props);
     this.state = {
       image: null,
-      fullname: this.props.auth.data.fullname,
-      email: this.props.auth.data.email,
+      fullname: '',
+      email: '',
     };
+  }
+
+  getUsers = async () => {
+    const token = this.props.auth.data.token;
+    const id = this.props.auth.data.id;
+
+    this.props
+      .getUsersById(token, id)
+      .then((response) => {
+        this.setState({
+          image: response.value.data.data[0].image,
+          fullname: response.value.data.data[0].fullname,
+          email: response.value.data.data[0].email,
+        });
+      })
+      .catch((error) => {
+        console.log(error.response);
+      });
+  };
+
+  componentDidMount() {
+    this.getUsers();
   }
 
   handleChooseImage = () => {
@@ -27,6 +51,7 @@ class EditProfile extends Component {
       if (response.uri) {
         this.setState({image: response});
       }
+      console.log(response.uri);
     });
   };
 
@@ -46,8 +71,19 @@ class EditProfile extends Component {
     await this.props
       .putUsers(token, id, formData)
       .then((response) => {
-        this.console.log(response);
-        alert('Edit Profile Success');
+        this.props.getUsersById(token, id);
+        console.log(response);
+        showMessage({
+          message: 'Edit Profile Success',
+          duration: 3000,
+          type: 'default',
+          icon: 'success',
+          backgroundColor: baseColor.lightgreen,
+          color: baseColor.black,
+        });
+        setTimeout(() => {
+          this.props.navigation.replace('Profile');
+        }, 3000);
       })
       .catch((error) => {
         console.log(error.response);
@@ -115,6 +151,15 @@ class EditProfile extends Component {
             }}
             onPress={this.handlePutProfile}
           />
+          <Button
+            title="Back to Profile"
+            buttonStyle={{
+              backgroundColor: baseColor.grey,
+              width: 300,
+              marginTop: 20,
+            }}
+            onPress={() => this.props.navigation.goBack()}
+          />
         </View>
       </View>
     );
@@ -149,6 +194,9 @@ const mapStateToProps = (state) => ({
   users: state.users,
 });
 
-const mapDispatchToProps = {putUsers};
+const mapDispatchToProps = {getUsersById, putUsers};
 
-export default connect(mapStateToProps, mapDispatchToProps)(EditProfile);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(withNavigation(EditProfile));

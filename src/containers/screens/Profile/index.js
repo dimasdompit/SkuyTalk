@@ -3,17 +3,38 @@ import {Text, View, StyleSheet} from 'react-native';
 import {Image, Button} from 'react-native-elements';
 import {baseColor} from '../../../styles/baseColor';
 import {baseFont} from '../../../styles/baseFont';
-import {API_URL} from '@env';
+import {BASE_API_URL} from '@env';
 
 import {connect} from 'react-redux';
+import {getUsersById} from '../../../config/redux/actions/users';
 import {logout} from '../../../config/redux/actions/auth';
 
 class Profile extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      users: this.props.auth.data,
+      users: [],
     };
+  }
+
+  getUsers = async () => {
+    const token = this.props.auth.data.token;
+    const id = this.props.auth.data.id;
+
+    await this.props
+      .getUsersById(token, id)
+      .then((response) => {
+        this.setState({
+          users: response.value.data.data[0],
+        });
+      })
+      .catch((error) => {
+        console.log(error.response);
+      });
+  };
+
+  componentDidMount() {
+    this.getUsers();
   }
 
   handleLogout = () => {
@@ -34,7 +55,7 @@ class Profile extends Component {
         </View>
         <View style={styles.profile}>
           <Image
-            source={{uri: `${API_URL}/images/${this.state.users.image}`}}
+            source={{uri: `${BASE_API_URL}/images/${this.state.users.image}`}}
             style={styles.image}
           />
           <Text style={styles.name}>{this.state.users.fullname}</Text>
@@ -47,7 +68,7 @@ class Profile extends Component {
             color: baseColor.white,
             fontFamily: baseFont.roboto.bold,
           }}
-          onPress={() => this.props.navigation.navigate('EditProfile')}
+          onPress={() => this.props.navigation.push('EditProfile')}
         />
       </View>
     );
@@ -101,6 +122,6 @@ const mapStateToProps = (state) => ({
   auth: state.auth,
 });
 
-const mapDispatchToProps = {logout};
+const mapDispatchToProps = {getUsersById, logout};
 
 export default connect(mapStateToProps, mapDispatchToProps)(Profile);
