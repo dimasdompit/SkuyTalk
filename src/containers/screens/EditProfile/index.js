@@ -6,7 +6,8 @@ import {baseFont} from '../../../styles/baseFont';
 import ImagePicker from 'react-native-image-picker';
 import {withNavigation} from '@react-navigation/compat';
 import {showMessage} from 'react-native-flash-message';
-import {BASE_API_URL} from '@env';
+// import {BASE_API_URL} from '@env';
+import {config} from '../../../config/baseUrl';
 
 import {connect} from 'react-redux';
 import {getUsersById, putUsers} from '../../../config/redux/actions/users';
@@ -98,7 +99,7 @@ class EditProfile extends Component {
           {image && (
             <Image
               source={{
-                uri: image.uri,
+                uri: image.uri || `${config.baseUrl}/images/${image}`,
               }}
               style={{height: 200, width: 200, alignSelf: 'center'}}
             />

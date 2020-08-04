@@ -10,6 +10,7 @@ import {baseColor} from '../../../styles/baseColor';
 import {baseFont} from '../../../styles/baseFont';
 import {SearchBar, Image} from 'react-native-elements';
 import {TouchableNativeFeedback} from 'react-native-gesture-handler';
+import Moment from 'react-moment';
 // import {API_URL} from '@env';
 import {config} from '../../../config/baseUrl';
 
@@ -108,7 +109,11 @@ class Chat extends Component {
                       : `${chat.content.substr(0, 31)}...`}
                   </Text>
                 </View>
-                <Text style={styles.chatDate}>{chat.date}</Text>
+                <Text style={styles.chatDate}>
+                  <Moment element={Text} format="HH:mm">
+                    {chat.date}
+                  </Moment>
+                </Text>
               </TouchableNativeFeedback>
             );
           })}

@@ -29,27 +29,48 @@ const chat = (state = initialState, action) => {
         data: action.payload.data.data,
       };
 
-    // case 'SHOW_ALL_CHATS_PENDING':
-    //   return {
-    //     ...state,
-    //     isLoading: true,
-    //     isError: false,
-    //     errorMsg: '',
-    //   };
-    // case 'SHOW_ALL_CHATS_REJECTED':
-    //   return {
-    //     ...state,
-    //     isLoading: false,
-    //     isError: true,
-    //     errorMsg: 'Data Rejected!',
-    //   };
-    // case 'SHOW_ALL_CHATS_FULFILLED':
-    //   return {
-    //     ...state,
-    //     isLoading: false,
-    //     isError: false,
-    //     data: action.payload.data.data,
-    //   };
+    case 'SHOW_ALL_CHATS_PENDING':
+      return {
+        ...state,
+        isLoading: true,
+        isError: false,
+        errorMsg: '',
+      };
+    case 'SHOW_ALL_CHATS_REJECTED':
+      return {
+        ...state,
+        isLoading: false,
+        isError: true,
+        errorMsg: 'Data Rejected!',
+      };
+    case 'SHOW_ALL_CHATS_FULFILLED':
+      return {
+        ...state,
+        isLoading: false,
+        isError: false,
+        data: action.payload.data.data,
+      };
+
+    case 'POST_CHATS_PENDING':
+      return {
+        ...state,
+        isLoading: true,
+        isError: false,
+        errorMsg: '',
+      };
+    case 'POST_CHATS_REJECTED':
+      return {
+        ...state,
+        isLoading: false,
+        isError: true,
+        errorMsg: 'Data Rejected!',
+      };
+    case 'POST_CHATS_FULFILLED':
+      return {
+        ...state,
+        isLoading: false,
+        isError: false,
+      };
 
     default:
       return state;

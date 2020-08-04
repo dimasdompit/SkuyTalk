@@ -15,7 +15,7 @@ import MessageBubble from '../../organism/MessageBubble';
 
 import {connect} from 'react-redux';
 import {getUsersById} from '../../../config/redux/actions/users';
-import {showAllChats} from '../../../config/redux/actions/chat';
+import {showAllChats, postChats} from '../../../config/redux/actions/chat';
 
 // EXTERNAL COMPONENTS
 const ButtonBack = ({onPress}) => {
@@ -61,12 +61,13 @@ export class PersonalChat extends Component {
     this.state = {
       users: [],
       chats: [],
+      newMessage: '',
     };
   }
 
   getUsers = async () => {
     const token = this.props.auth.data.token;
-    const id = this.props.auth.data.id;
+    const id = this.props.route.params.id;
 
     await this.props
       .getUsersById(token, id)
@@ -101,8 +102,24 @@ export class PersonalChat extends Component {
     this.showChats();
   }
 
+  postChats = async () => {
+    const token = this.props.auth.data.token;
+    let formData = new FormData();
+    formData.append('sender', this.props.auth.data.id);
+    formData.append('receiver', this.props.route.params.id);
+    formData.append('content', this.state.newMessage);
+
+    await this.props
+      .postChats(token, formData)
+      .then((response) => {
+        this.props.showAllChats(token, this.props.route.params.id);
+        this.setState({newMessage: ''});
+      })
+      .catch((error) => console.log(error.message));
+  };
+
   render() {
-    console.log(this.state.chats);
+    console.log(this.state.users);
     return (
       <>
         <Header
@@ -111,13 +128,13 @@ export class PersonalChat extends Component {
           leftComponent={
             <ButtonBack onPress={() => this.props.navigation.goBack()} />
           }
-          // centerComponent={
-          //   <Friends
-          //     image={this.state.users[0].image}
-          //     name={this.state.users[0].senderName}
-          //     onPress={() => this.props.navigation.navigate('FriendProfile')}
-          //   />
-          // }
+          centerComponent={
+            <Friends
+              image={this.state.users['image']}
+              name={this.state.users['fullname']}
+              onPress={() => this.props.navigation.navigate('FriendProfile')}
+            />
+          }
         />
         <ScrollView style={styles.container}>
           {this.state.chats.map((chat) => {
@@ -125,6 +142,7 @@ export class PersonalChat extends Component {
               <MessageBubble
                 key={chat.id}
                 text={chat.content}
+                date={chat.date}
                 mine={chat.receiver === this.props.auth.data.id}
               />
             );
@@ -148,6 +166,8 @@ export class PersonalChat extends Component {
               flex: 1,
               backgroundColor: baseColor.dark,
             }}
+            value={this.state.newMessage}
+            onChangeText={(input) => this.setState({newMessage: input})}
           />
           <Button
             containerStyle={{
@@ -158,7 +178,7 @@ export class PersonalChat extends Component {
             }}
             buttonStyle={{backgroundColor: baseColor.purple}}
             icon={<Icon name="send" size={20} color="white" />}
-            onPress={() => alert('button send')}
+            onPress={() => this.postChats()}
           />
         </View>
       </>
@@ -232,6 +252,6 @@ const mapStateToProps = (state) => ({
   chat: state.chat,
 });
 
-const mapDispatchToProps = {getUsersById, showAllChats};
+const mapDispatchToProps = {getUsersById, showAllChats, postChats};
 
 export default connect(mapStateToProps, mapDispatchToProps)(PersonalChat);
