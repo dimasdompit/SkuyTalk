@@ -16,6 +16,7 @@ import MessageBubble from '../../organism/MessageBubble';
 import {connect} from 'react-redux';
 import {getUsersById} from '../../../config/redux/actions/users';
 import {showAllChats, postChats} from '../../../config/redux/actions/chat';
+import {cos} from 'react-native-reanimated';
 
 // EXTERNAL COMPONENTS
 const ButtonBack = ({onPress}) => {
@@ -73,7 +74,7 @@ export class PersonalChat extends Component {
       .getUsersById(token, id)
       .then((response) => {
         this.setState({
-          users: this.props.users.data,
+          users: response.value.data.data,
         });
       })
       .catch((error) => {
@@ -119,7 +120,6 @@ export class PersonalChat extends Component {
   };
 
   render() {
-    console.log(this.state.users);
     return (
       <>
         <Header
@@ -130,8 +130,8 @@ export class PersonalChat extends Component {
           }
           centerComponent={
             <Friends
-              image={this.state.users['image']}
-              name={this.state.users['fullname']}
+              image={this.props.users.data[0].image}
+              name={this.props.users.data[0].fullname}
               onPress={() => this.props.navigation.navigate('FriendProfile')}
             />
           }
