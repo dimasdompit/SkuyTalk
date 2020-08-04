@@ -3,7 +3,8 @@ import {Text, View, StyleSheet} from 'react-native';
 import {Image, Button} from 'react-native-elements';
 import {baseColor} from '../../../styles/baseColor';
 import {baseFont} from '../../../styles/baseFont';
-import {BASE_API_URL} from '@env';
+// import {API_URL} from '@env';
+import {config} from '../../../config/baseUrl';
 
 import {connect} from 'react-redux';
 import {getUsersById} from '../../../config/redux/actions/users';
@@ -55,11 +56,23 @@ class Profile extends Component {
         </View>
         <View style={styles.profile}>
           <Image
-            source={{uri: `${BASE_API_URL}/images/${this.state.users.image}`}}
+            source={{
+              uri: `${config.baseUrl}/images/${this.state.users.image}`,
+            }}
             style={styles.image}
           />
           <Text style={styles.name}>{this.state.users.fullname}</Text>
           {/* <Text style={styles.map}>{this.state.users.map}</Text> */}
+          <Button
+            type="clear"
+            title="Show My Location"
+            // buttonStyle={{marginTop: 20, backgroundColor: baseColor.purple}}
+            titleStyle={{
+              color: baseColor.lightgreen,
+              fontFamily: baseFont.roboto.bold,
+            }}
+            onPress={() => this.props.navigation.push('UserMaps')}
+          />
         </View>
         <Button
           title="Edit Profile"

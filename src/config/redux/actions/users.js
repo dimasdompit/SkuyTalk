@@ -1,12 +1,13 @@
 import axios from 'axios';
-import {BASE_API_URL} from '@env';
+// import {API_URL} from '@env';
+import {config} from '../../baseUrl';
 
 export const getAllUsers = (token) => {
   return {
     type: 'GET_ALL_USERS',
     payload: axios({
       method: 'GET',
-      url: `${BASE_API_URL}/users`,
+      url: `${config.baseUrl}/users`,
       headers: {
         Authorization: token,
       },
@@ -19,7 +20,7 @@ export const getUsersById = (token, id) => {
     type: 'GET_USERS_BY_ID',
     payload: axios({
       method: 'GET',
-      url: `${BASE_API_URL}/users/${id}`,
+      url: `${config.baseUrl}/users/${id}`,
       headers: {
         Authorization: token,
       },
@@ -32,7 +33,7 @@ export const putUsers = (token, id, data) => {
     type: 'PUTUSERS',
     payload: axios({
       method: 'PUT',
-      url: `${BASE_API_URL}/users/${id}`,
+      url: `${config.baseUrl}/users/${id}`,
       data: data,
       headers: {
         Authorization: token,

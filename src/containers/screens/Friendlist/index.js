@@ -77,6 +77,7 @@ class Friendlist extends Component {
             />
           )}
           {this.state.contact.map((contact) => {
+            console.log(contact);
             return (
               <TouchableNativeFeedback
                 onPress={() => this.props.navigation.navigate('FriendProfile')}
@@ -87,7 +88,11 @@ class Friendlist extends Component {
                   source={{uri: contact.image}}
                   style={styles.friendPics}
                 />
-                <Text style={styles.friendsName}>{contact.friend_id}</Text>
+                <Text style={styles.friendsName}>
+                  {contact.user_id === this.props.auth.data.id
+                    ? contact.friend_name
+                    : contact.friend_name}
+                </Text>
               </TouchableNativeFeedback>
             );
           })}

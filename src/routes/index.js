@@ -12,6 +12,7 @@ import {
   PersonalChat,
   FriendProfile,
   EditProfile,
+  UserMaps,
 } from '../containers/screens/index';
 import {baseColor} from '../styles/baseColor';
 import {baseFont} from '../styles/baseFont';
@@ -99,11 +100,11 @@ const AppNavigator = () => {
         component={FriendProfile}
         // options={{headerShown: false}}
       />
-      {/* <Stack.Screen
-        name="EditProfile"
-        component={EditProfile}
-        options={{headerShown: false, headerBackground: baseColor.dark}}
-      /> */}
+      <Stack.Screen
+        name="UserMaps"
+        component={UserMaps}
+        // options={{headerShown: false, headerBackground: baseColor.dark}}
+      />
     </Stack.Navigator>
   );
 };

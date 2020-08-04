@@ -1,12 +1,13 @@
 import axios from 'axios';
-import {BASE_API_URL} from '@env';
+// import {API_URL_SECOND} from '@env';
+import {config} from '../../baseUrl';
 
 export const login = (data) => {
   return {
     type: 'LOGIN',
     payload: axios({
       method: 'POST',
-      url: `${BASE_API_URL}/auth/login`,
+      url: `${config.baseUrl}/auth/login`,
       data: {
         username: data.username,
         password: data.password,
@@ -20,7 +21,7 @@ export const register = (data) => {
     type: 'REGISTER',
     payload: axios({
       method: 'POST',
-      url: `${BASE_API_URL}/users`,
+      url: `${config.baseUrl}/users`,
       data: {
         fullname: data.fullname,
         email: data.email,

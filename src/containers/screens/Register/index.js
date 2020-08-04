@@ -5,6 +5,7 @@ import {baseColor} from '../../../styles/baseColor';
 import {baseFont} from '../../../styles/baseFont';
 import Logo from '../../../assets/images/skuytalk-logo.png';
 import {showMessage} from 'react-native-flash-message';
+import {config} from '../../../config/baseUrl';
 
 import {connect} from 'react-redux';
 import {register} from '../../../config/redux/actions/auth';
@@ -20,7 +21,7 @@ export class Register extends Component {
     };
   }
 
-  handleRegister = () => {
+  handleRegister = async () => {
     const data = {
       fullname: this.state.fullname,
       email: this.state.email,
@@ -28,7 +29,7 @@ export class Register extends Component {
       password: this.state.password,
     };
 
-    this.props
+    await this.props
       .register(data)
       .then((response) => {
         console.log(response);
@@ -60,6 +61,7 @@ export class Register extends Component {
   };
 
   render() {
+    console.log(config.baseUrl);
     return (
       <View style={styles.container}>
         <View style={styles.topContent}>

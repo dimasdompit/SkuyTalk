@@ -6,6 +6,7 @@ import Profile from './Profile';
 import PersonalChat from './PersonalChat';
 import FriendProfile from './FriendProfile';
 import EditProfile from './EditProfile';
+import UserMaps from './UserMaps';
 
 export {
   Login,
@@ -16,4 +17,5 @@ export {
   PersonalChat,
   FriendProfile,
   EditProfile,
+  UserMaps,
 };

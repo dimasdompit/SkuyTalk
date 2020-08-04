@@ -10,7 +10,8 @@ import {baseColor} from '../../../styles/baseColor';
 import {baseFont} from '../../../styles/baseFont';
 import {SearchBar, Image} from 'react-native-elements';
 import {TouchableNativeFeedback} from 'react-native-gesture-handler';
-import {BASE_API_URL} from '@env';
+// import {API_URL} from '@env';
+import {config} from '../../../config/baseUrl';
 
 import {connect} from 'react-redux';
 import {getChats} from '../../../config/redux/actions/chat';
@@ -87,13 +88,16 @@ class Chat extends Component {
               <TouchableNativeFeedback
                 onPress={() =>
                   this.props.navigation.navigate('PersonalChat', {
-                    id: chat.id,
+                    id:
+                      chat.receiver === this.props.auth.data.id
+                        ? chat.sender
+                        : chat.receiver,
                   })
                 }
                 key={chat.id}
                 style={styles.friendsChat}>
                 <Image
-                  source={{uri: `${BASE_API_URL}/images/${chat.image}`}}
+                  source={{uri: `${config.baseUrl}/images/${chat.image}`}}
                   style={styles.friendPics}
                 />
                 <View style={styles.friendsMessage}>

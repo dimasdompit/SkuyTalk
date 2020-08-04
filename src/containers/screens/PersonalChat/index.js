@@ -11,6 +11,7 @@ import {
   TouchableOpacity,
 } from 'react-native-gesture-handler';
 import {API_URL} from '@env';
+import MessageBubble from '../../organism/MessageBubble';
 
 import {connect} from 'react-redux';
 import {getUsersById} from '../../../config/redux/actions/users';
@@ -53,32 +54,6 @@ const Friends = (props) => {
   );
 };
 
-const SenderBalloon = (props) => {
-  return (
-    <View style={[styles.item, styles.itemIn]}>
-      <TouchableOpacity
-        onLongPress={props.onLongPress}
-        style={[styles.senderBalloon, {backgroundColor: baseColor.black}]}>
-        <Text style={styles.senderContent}>{props.message}</Text>
-        <Text style={styles.senderDate}>{props.date}</Text>
-      </TouchableOpacity>
-    </View>
-  );
-};
-
-const ReceiverBalloon = (props) => {
-  return (
-    <View style={[styles.item, styles.itemOut]}>
-      <TouchableOpacity
-        onLongPress={props.onLongPress}
-        style={[styles.receiverBalloon, {backgroundColor: baseColor.purple}]}>
-        <Text style={styles.receiverContent}>{props.message}</Text>
-        <Text style={styles.receiverDate}>{props.date}</Text>
-      </TouchableOpacity>
-    </View>
-  );
-};
-
 // MAIN COMPONENT
 export class PersonalChat extends Component {
   constructor(props) {
@@ -107,12 +82,13 @@ export class PersonalChat extends Component {
 
   showChats = async () => {
     const token = this.props.auth.data.token;
+    const id = this.props.route.params.id;
 
     await this.props
-      .showAllChats(token)
+      .showAllChats(token, id)
       .then((response) => {
         this.setState({
-          chats: this.props.chat.data,
+          chats: response.value.data.data,
         });
       })
       .catch((error) => {
@@ -126,7 +102,7 @@ export class PersonalChat extends Component {
   }
 
   render() {
-    console.log(this.state.users);
+    console.log(this.state.chats);
     return (
       <>
         <Header
@@ -145,29 +121,14 @@ export class PersonalChat extends Component {
         />
         <ScrollView style={styles.container}>
           {this.state.chats.map((chat) => {
-            {
-              chat.receiver_name !== this.props.auth.data.fullname ? (
-                <SenderBalloon
-                  key={chat.id}
-                  message={chat.content}
-                  date={chat.date}
-                  // onLongPress={() => alert('sender message')}
-                />
-              ) : (
-                <ReceiverBalloon
-                  key={chat.id}
-                  message={chat.content}
-                  date={chat.date}
-                  onLongPress={() => alert('sender message')}
-                />
-              );
-            }
+            return (
+              <MessageBubble
+                key={chat.id}
+                text={chat.content}
+                mine={chat.receiver === this.props.auth.data.id}
+              />
+            );
           })}
-          {/* <ReceiverBalloon
-            message="Lagi ena ena"
-            date="00:00"
-            onLongPress={() => alert('sender message')}
-          /> */}
         </ScrollView>
         <View
           style={{

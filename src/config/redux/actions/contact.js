@@ -1,12 +1,13 @@
 import axios from 'axios';
-import {BASE_API_URL} from '@env';
+// import {API_URL} from '@env';
+import {config} from '../../baseUrl';
 
 export const getAllContact = (token) => {
   return {
     type: 'GETALLCONTACT',
     payload: axios({
       method: 'GET',
-      url: `${BASE_API_URL}/contacts`,
+      url: `${config.baseUrl}/contacts`,
       headers: {
         Authorization: token,
       },
