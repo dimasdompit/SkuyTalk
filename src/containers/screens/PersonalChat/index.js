@@ -136,7 +136,13 @@ export class PersonalChat extends Component {
             />
           }
         />
-        <ScrollView style={styles.container}>
+        <ScrollView
+          style={styles.container}
+          showsVerticalScrollIndicator={false}
+          ref={(scroll) => {
+            this.scroll = scroll;
+          }}
+          onContentSizeChange={() => this.scroll.scrollToEnd()}>
           {this.state.chats.map((chat) => {
             return (
               <MessageBubble
