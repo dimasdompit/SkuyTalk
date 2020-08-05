@@ -64,7 +64,7 @@ export default MessageBubble;
 const styles = StyleSheet.create({
   message: {
     flexDirection: 'row',
-    marginVertical: moderateScale(4, 2),
+    marginVertical: moderateScale(2, 0),
   },
   mine: {
     marginLeft: 20,

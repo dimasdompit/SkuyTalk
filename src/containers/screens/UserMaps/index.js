@@ -8,6 +8,7 @@ import Geolocation from '@react-native-community/geolocation';
 
 import {connect} from 'react-redux';
 import {getUsersById, putUsers} from '../../../config/redux/actions/users';
+import {getAllContact} from '../../../config/redux/actions/contact';
 
 const initialRegion = {
   latitude: null,
@@ -21,26 +22,47 @@ export class UserMaps extends Component {
     super(props);
     this.state = {
       users: [],
-      ready: false,
+      isLoading: true,
       currentPosition: initialRegion,
+      friends: [],
     };
   }
 
-  getUsers = () => {
+  getUsers = async () => {
     const token = this.props.auth.data.token;
     const id = this.props.auth.data.id;
 
-    this.props
+    await this.props
       .getUsersById(token, id)
-      .then((response) => this.setState({users: response.value.data.data[0]}))
+      .then(
+        async (response) =>
+          await this.setState({users: response.value.data.data[0]}),
+      )
       .catch((error) => {
         console.log(error);
       });
   };
 
-  componentDidMount() {
-    this.getUsers();
-    Geolocation.getCurrentPosition(
+  getFriends = async () => {
+    const token = this.props.auth.data.token;
+
+    await this.props
+      .getAllContact(token)
+      .then(async (response) => {
+        await this.setState({
+          isLoading: false,
+          friends: response.value.data.data,
+        });
+      })
+      .catch((error) => {
+        console.log(error.response);
+      });
+  };
+
+  componentDidMount = async () => {
+    await this.getUsers();
+    await this.getFriends();
+    await Geolocation.getCurrentPosition(
       async (position) => {
         const {latitude, longitude} = position.coords;
         const token = this.props.auth.data.token;
@@ -67,16 +89,15 @@ export class UserMaps extends Component {
       },
       {timeout: 20000, maximumAge: 1000},
     );
-  }
+  };
 
   render() {
-    const {currentPosition} = this.state;
-    return currentPosition.latitude ? (
+    const {currentPosition, isLoading, friends} = this.state;
+    return currentPosition.latitude && !isLoading ? (
       <MapView
         provider={PROVIDER_GOOGLE}
         style={{position: 'absolute', top: 0, right: 0, bottom: 0, left: 0}}
-        initialRegion={this.state.currentPosition}
-        showsUserLocation>
+        initialRegion={this.state.currentPosition}>
         <Marker
           title={this.state.users.fullname}
           coordinate={{
@@ -89,6 +110,27 @@ export class UserMaps extends Component {
             style={{height: 50, width: 50, borderRadius: 50}}
           />
         </Marker>
+        {this.state.friends.map((friend) => {
+          return (
+            !isLoading && (
+              <Marker
+                key={friend.id}
+                title={friend.friendName}
+                coordinate={{
+                  latitude: friend.latitude,
+                  longitude: friend.longitude,
+                }}
+                draggable>
+                <Image
+                  source={{
+                    uri: `${config.baseUrl}/images/${friend.friendImage}`,
+                  }}
+                  style={{height: 50, width: 50, borderRadius: 50}}
+                />
+              </Marker>
+            )
+          );
+        })}
       </MapView>
     ) : (
       <View>
@@ -101,8 +143,9 @@ export class UserMaps extends Component {
 const mapStateToProps = (state) => ({
   auth: state.auth,
   users: state.users,
+  contact: state.contact,
 });
 
-const mapDispatchToProps = {getUsersById, putUsers};
+const mapDispatchToProps = {getUsersById, putUsers, getAllContact};
 
 export default connect(mapStateToProps, mapDispatchToProps)(UserMaps);
