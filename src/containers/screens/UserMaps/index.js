@@ -87,7 +87,7 @@ export class UserMaps extends Component {
       (error) => {
         console.log(error.message);
       },
-      {timeout: 20000, maximumAge: 1000},
+      {timeout: 20000 /* maximumAge: 1000 */},
     );
   };
 
