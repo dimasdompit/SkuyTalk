@@ -13,6 +13,7 @@ import {TouchableNativeFeedback} from 'react-native-gesture-handler';
 import Moment from 'react-moment';
 // import {API_URL} from '@env';
 import {config} from '../../../config/baseUrl';
+import io from 'socket.io-client';
 
 import {connect} from 'react-redux';
 import {getChats} from '../../../config/redux/actions/chat';
@@ -34,7 +35,7 @@ class Chat extends Component {
       .then((response) => {
         console.log(response);
         this.setState({
-          chats: this.props.chat.data,
+          chats: response.value.data.data,
         });
       })
       .catch((error) => console.log(error));
@@ -42,6 +43,25 @@ class Chat extends Component {
 
   componentDidMount() {
     this.getChats();
+    this.socket = io(`${config.baseUrl}`);
+    this.socket.on('last-chat', (msg, id) => {
+      // console.log(id);
+      if (id === this.props.auth.data.id) {
+        return this.setState({chats: msg});
+      }
+    });
+
+    this.socket.on('chat', (response) => {
+      if (response.receiver === this.props.auth.data.id) {
+        this.getChats();
+        return console.log('success!');
+      }
+    });
+  }
+
+  componentWillUnmount() {
+    this.socket.removeAllListeners();
+    this.socket.disconnect();
   }
 
   handleSearch = (search) => {

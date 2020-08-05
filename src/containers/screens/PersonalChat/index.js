@@ -124,7 +124,8 @@ export class PersonalChat extends Component {
       console.log(response);
       // const {id} = this.props.route.params;
       // let id = this.props.route.params.id;
-      // if (response.receiver === id || response.sender === id) {
+      // console.log(id);
+      // if (response.sender === id || response.receiver === id) {
       this.setState({chats: [...this.state.chats, response]});
       // }
     });
@@ -148,7 +149,11 @@ export class PersonalChat extends Component {
             <Friends
               image={this.state.users.image}
               name={this.state.users.fullname}
-              onPress={() => this.props.navigation.navigate('FriendProfile')}
+              onPress={() =>
+                this.props.navigation.navigate('FriendProfile', {
+                  id: this.state.users.id,
+                })
+              }
             />
           }
         />
@@ -165,7 +170,7 @@ export class PersonalChat extends Component {
                 key={chat.id}
                 text={chat.content}
                 date={chat.date}
-                mine={chat.receiver === this.props.auth.data.id}
+                mine={chat.receiver === this.props.auth.data.id ? true : false}
               />
             );
           })}

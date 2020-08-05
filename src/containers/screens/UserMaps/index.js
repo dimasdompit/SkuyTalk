@@ -92,7 +92,7 @@ export class UserMaps extends Component {
   };
 
   render() {
-    const {currentPosition, isLoading, friends} = this.state;
+    const {currentPosition, isLoading} = this.state;
     return currentPosition.latitude && !isLoading ? (
       <MapView
         provider={PROVIDER_GOOGLE}

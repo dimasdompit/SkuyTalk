@@ -95,11 +95,7 @@ const AppNavigator = () => {
         component={PersonalChat}
         options={{headerShown: false}}
       />
-      <Stack.Screen
-        name="FriendProfile"
-        component={FriendProfile}
-        // options={{headerShown: false}}
-      />
+      <Stack.Screen name="FriendProfile" component={FriendProfile} />
       <Stack.Screen
         name="UserMaps"
         component={UserMaps}
