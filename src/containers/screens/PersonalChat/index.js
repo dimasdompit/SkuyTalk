@@ -10,13 +10,14 @@ import {
   TouchableNativeFeedback,
   TouchableOpacity,
 } from 'react-native-gesture-handler';
-import {API_URL} from '@env';
+// import {API_URL} from '@env';
+import {config} from '../../../config/baseUrl';
 import MessageBubble from '../../organism/MessageBubble';
+import io from 'socket.io-client';
 
 import {connect} from 'react-redux';
 import {getUsersById} from '../../../config/redux/actions/users';
 import {showAllChats, postChats} from '../../../config/redux/actions/chat';
-import {cos} from 'react-native-reanimated';
 
 // EXTERNAL COMPONENTS
 const ButtonBack = ({onPress}) => {
@@ -39,7 +40,7 @@ const Friends = (props) => {
         alignItems: 'center',
       }}>
       <Image
-        source={{uri: `${API_URL}/images/${props.image}`}}
+        source={{uri: `${config.baseUrl}/images/${props.image}`}}
         style={{height: 50, width: 50, borderRadius: 50}}
       />
       <Text
@@ -72,9 +73,9 @@ export class PersonalChat extends Component {
 
     await this.props
       .getUsersById(token, id)
-      .then((response) => {
-        this.setState({
-          users: response.value.data.data,
+      .then(async (response) => {
+        await this.setState({
+          users: response.value.data.data[0],
         });
       })
       .catch((error) => {
@@ -88,8 +89,8 @@ export class PersonalChat extends Component {
 
     await this.props
       .showAllChats(token, id)
-      .then((response) => {
-        this.setState({
+      .then(async (response) => {
+        await this.setState({
           chats: response.value.data.data,
         });
       })
@@ -98,12 +99,8 @@ export class PersonalChat extends Component {
       });
   };
 
-  componentDidMount() {
-    this.getUsers();
-    this.showChats();
-  }
-
   postChats = async () => {
+    // this.socket.emit('chat-message', 'HI from App');
     const token = this.props.auth.data.token;
     let formData = new FormData();
     formData.append('sender', this.props.auth.data.id);
@@ -112,12 +109,31 @@ export class PersonalChat extends Component {
 
     await this.props
       .postChats(token, formData)
-      .then((response) => {
-        this.props.showAllChats(token, this.props.route.params.id);
-        this.setState({newMessage: ''});
+      .then(async (response) => {
+        await this.props.showAllChats(token, this.props.route.params.id);
+        await this.setState({newMessage: ''});
       })
       .catch((error) => console.log(error.message));
   };
+
+  componentDidMount() {
+    this.getUsers();
+    this.showChats();
+    this.socket = io(`${config.baseUrl}`);
+    this.socket.on('chat', (response) => {
+      console.log(response);
+      // const {id} = this.props.route.params;
+      // let id = this.props.route.params.id;
+      // if (response.receiver === id || response.sender === id) {
+      this.setState({chats: [...this.state.chats, response]});
+      // }
+    });
+  }
+
+  componentWillUnmount() {
+    this.socket.removeAllListeners();
+    this.socket.disconnect();
+  }
 
   render() {
     return (
@@ -130,8 +146,8 @@ export class PersonalChat extends Component {
           }
           centerComponent={
             <Friends
-              image={this.props.users.data[0].image}
-              name={this.props.users.data[0].fullname}
+              image={this.state.users.image}
+              name={this.state.users.fullname}
               onPress={() => this.props.navigation.navigate('FriendProfile')}
             />
           }
@@ -156,7 +172,7 @@ export class PersonalChat extends Component {
         </ScrollView>
         <View
           style={{
-            // maxHeight: moderateScale(250, 2),
+            // height: 50,
             // paddingHorizontal: 10,
             flexDirection: 'row',
             backgroundColor: baseColor.dark,

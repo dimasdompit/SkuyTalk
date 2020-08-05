@@ -10,6 +10,7 @@ import {baseColor} from '../../../styles/baseColor';
 import {baseFont} from '../../../styles/baseFont';
 import {SearchBar, Image} from 'react-native-elements';
 import {TouchableNativeFeedback} from 'react-native-gesture-handler';
+import {config} from '../../../config/baseUrl';
 
 import {connect} from 'react-redux';
 import {getAllContact} from '../../../config/redux/actions/contact';
@@ -37,6 +38,10 @@ class Friendlist extends Component {
       });
   };
 
+  handleSearch = (keyword) => {
+    this.setState({search: keyword});
+  };
+
   componentDidMount() {
     this.showAllContact();
   }
@@ -61,7 +66,7 @@ class Friendlist extends Component {
             placeholderTextColor={baseColor.grey}
             inputStyle={{color: baseColor.grey}}
           />
-          <Text style={styles.heading}>Friendlist</Text>
+          <Text style={styles.heading}>Contacts</Text>
         </View>
         <ScrollView style={styles.middleContent}>
           {this.props.contact.isLoading && (
@@ -77,22 +82,23 @@ class Friendlist extends Component {
             />
           )}
           {this.state.contact.map((contact) => {
-            console.log(contact);
             return (
               <TouchableNativeFeedback
-                onPress={() => this.props.navigation.navigate('FriendProfile')}
+                onPress={() =>
+                  this.props.navigation.navigate('PersonalChat', {
+                    id: contact.idFriend,
+                  })
+                }
                 onLongPress={() => alert('ok')}
                 key={contact.id}
                 style={styles.friendList}>
                 <Image
-                  source={{uri: contact.image}}
+                  source={{
+                    uri: `${config.baseUrl}/images/${contact.friendImage}`,
+                  }}
                   style={styles.friendPics}
                 />
-                <Text style={styles.friendsName}>
-                  {contact.user_id === this.props.auth.data.id
-                    ? contact.friend_name
-                    : contact.friend_name}
-                </Text>
+                <Text style={styles.friendsName}>{contact.friendName}</Text>
               </TouchableNativeFeedback>
             );
           })}
