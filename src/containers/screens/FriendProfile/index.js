@@ -14,7 +14,8 @@ class FriendProfile extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      friends: [],
+      friends: [] || this.props.users.data[0],
+      isFriend: false,
     };
   }
 
@@ -36,6 +37,7 @@ class FriendProfile extends Component {
 
   componentDidMount() {
     this.getFriend();
+    // this.checkFriend();
   }
 
   render() {
@@ -86,7 +88,11 @@ class FriendProfile extends Component {
             fontFamily: baseFont.roboto.bold,
             paddingLeft: 5,
           }}
-          onPress={() => alert('ok')}
+          onPress={() =>
+            this.props.navigation.navigate('PersonalChat', {
+              id: this.state.friends.id,
+            })
+          }
         />
       </View>
     );

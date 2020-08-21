@@ -62,7 +62,7 @@ const ChatTab = (props) => {
         name="Friendlist"
         component={Friendlist}
         options={{
-          tabBarLabel: 'Friendlist',
+          tabBarLabel: 'Contacts',
           tabBarIcon: ({color, size}) => (
             <Fontawesome name="address-book" color={color} size={size} />
           ),
@@ -95,11 +95,15 @@ const AppNavigator = () => {
         component={PersonalChat}
         options={{headerShown: false}}
       />
-      <Stack.Screen name="FriendProfile" component={FriendProfile} />
+      <Stack.Screen
+        name="FriendProfile"
+        component={FriendProfile}
+        options={{headerTitle: 'Back'}}
+      />
       <Stack.Screen
         name="UserMaps"
         component={UserMaps}
-        // options={{headerShown: false, headerBackground: baseColor.dark}}
+        options={{headerTitle: 'Go Back'}}
       />
     </Stack.Navigator>
   );

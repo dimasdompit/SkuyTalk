@@ -106,7 +106,7 @@ const styles = StyleSheet.create({
   },
   logout: {
     fontFamily: baseFont.roboto.bold,
-    color: baseColor.purple,
+    color: baseColor.danger,
   },
   profile: {
     justifyContent: 'center',

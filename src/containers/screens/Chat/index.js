@@ -89,10 +89,10 @@ class Chat extends Component {
             inputStyle={{color: baseColor.grey}}
           />
           <Text style={styles.heading}>Messages</Text>
-          <Text style={styles.notifHeading}>You have 2 new messages</Text>
+          <Text style={styles.notifHeading}>You have a new messages</Text>
         </View>
         <ScrollView style={styles.middleContent}>
-          {this.props.chat.isLoading && (
+          {/* {this.props.chat.isLoading && (
             <ActivityIndicator
               style={{
                 flex: 1,
@@ -103,7 +103,7 @@ class Chat extends Component {
               size="large"
               color={baseColor.white}
             />
-          )}
+          )} */}
           {this.state.chats.map((chat) => {
             return (
               <TouchableNativeFeedback

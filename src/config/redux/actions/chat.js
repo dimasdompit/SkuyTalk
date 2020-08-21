@@ -28,12 +28,12 @@ export const showAllChats = (token, id) => {
   };
 };
 
-export const postChats = (token, data) => {
+export const postChats = (token, id, data) => {
   return {
     type: 'POST_CHATS',
     payload: axios({
       method: 'POST',
-      url: `${config.baseUrl}/chat`,
+      url: `${config.baseUrl}/chat/${id}`,
       data: data,
       headers: {
         Authorization: token,

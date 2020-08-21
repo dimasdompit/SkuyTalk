@@ -75,10 +75,10 @@ const styles = StyleSheet.create({
   },
   cloud: {
     maxWidth: moderateScale(250, 2),
-    paddingHorizontal: moderateScale(10, 2),
-    paddingTop: moderateScale(5, 2),
-    paddingBottom: moderateScale(7, 2),
-    borderRadius: 20,
+    paddingHorizontal: moderateScale(8, 2),
+    paddingTop: moderateScale(3, 2),
+    paddingBottom: moderateScale(3, 2),
+    borderRadius: 10,
   },
   text: {
     paddingTop: 3,

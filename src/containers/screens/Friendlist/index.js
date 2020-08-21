@@ -85,7 +85,7 @@ class Friendlist extends Component {
             return (
               <TouchableNativeFeedback
                 onPress={() =>
-                  this.props.navigation.navigate('PersonalChat', {
+                  this.props.navigation.navigate('FriendProfile', {
                     id: contact.idFriend,
                   })
                 }

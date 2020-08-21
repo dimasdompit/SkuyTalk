@@ -102,15 +102,16 @@ export class PersonalChat extends Component {
   postChats = async () => {
     // this.socket.emit('chat-message', 'HI from App');
     const token = this.props.auth.data.token;
+    const id = this.props.route.params.id;
     let formData = new FormData();
     formData.append('sender', this.props.auth.data.id);
     formData.append('receiver', this.props.route.params.id);
     formData.append('content', this.state.newMessage);
 
     await this.props
-      .postChats(token, formData)
+      .postChats(token, id, formData)
       .then(async (response) => {
-        await this.props.showAllChats(token, this.props.route.params.id);
+        await this.props.showAllChats(token, id);
         await this.setState({newMessage: ''});
       })
       .catch((error) => console.log(error.message));
@@ -122,12 +123,11 @@ export class PersonalChat extends Component {
     this.socket = io(`${config.baseUrl}`);
     this.socket.on('chat', (response) => {
       console.log(response);
-      // const {id} = this.props.route.params;
-      // let id = this.props.route.params.id;
-      // console.log(id);
-      // if (response.sender === id || response.receiver === id) {
-      this.setState({chats: [...this.state.chats, response]});
-      // }
+      let id = this.props.route.params.id;
+      console.log(id);
+      if (response.sender === id || response.receiver === id) {
+        return this.setState({chats: [...this.state.chats, response]});
+      }
     });
   }
 
@@ -138,13 +138,15 @@ export class PersonalChat extends Component {
 
   render() {
     return (
-      <>
+      <View style={{flex: 1}}>
         <Header
           placement="left"
+          containerStyle={{height: 100}}
           backgroundColor={baseColor.dark}
           leftComponent={
             <ButtonBack onPress={() => this.props.navigation.goBack()} />
           }
+          centerContainerStyle={{backgroundColor: baseColor.dark}}
           centerComponent={
             <Friends
               image={this.state.users.image}
@@ -159,6 +161,7 @@ export class PersonalChat extends Component {
         />
         <ScrollView
           style={styles.container}
+          contentContainerStyle={{paddingBottom: 30}}
           showsVerticalScrollIndicator={false}
           ref={(scroll) => {
             this.scroll = scroll;
@@ -208,7 +211,7 @@ export class PersonalChat extends Component {
             onPress={() => this.postChats()}
           />
         </View>
-      </>
+      </View>
     );
   }
 }
