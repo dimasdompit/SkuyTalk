@@ -13,6 +13,7 @@ import {
   FriendProfile,
   EditProfile,
   UserMaps,
+  SearchFriends,
 } from '../containers/screens/index';
 import {baseColor} from '../styles/baseColor';
 import {baseFont} from '../styles/baseFont';
@@ -65,6 +66,16 @@ const ChatTab = (props) => {
           tabBarLabel: 'Contacts',
           tabBarIcon: ({color, size}) => (
             <Fontawesome name="address-book" color={color} size={size} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Search"
+        component={SearchFriends}
+        options={{
+          tabBarLabel: 'Search',
+          tabBarIcon: ({color, size}) => (
+            <Fontawesome name="search" color={color} size={size} />
           ),
         }}
       />

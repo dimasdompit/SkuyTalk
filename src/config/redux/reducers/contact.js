@@ -28,6 +28,27 @@ const contact = (state = initialState, action) => {
         data: action.payload.data.data,
       };
 
+    case 'SEARCH_CONTACT_PENDING':
+      return {
+        ...state,
+        isLoading: true,
+        isError: false,
+      };
+    case 'SEARCH_CONTACT_REJECTED':
+      return {
+        ...state,
+        isLoading: false,
+        isError: true,
+        errorMsg: 'Data Rejected!',
+      };
+    case 'SEARCH_CONTACT_FULFILLED':
+      return {
+        ...state,
+        isLoading: false,
+        isError: false,
+        data: action.payload.data.data,
+      };
+
     default:
       return state;
   }

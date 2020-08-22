@@ -123,9 +123,7 @@ export class PersonalChat extends Component {
     this.showChats();
     this.socket = io(`${config.baseUrl}`);
     this.socket.on('chat', (response) => {
-      console.log(response);
       let id = this.props.route.params.id;
-      console.log(id);
       if (response.sender === id || response.receiver === id) {
         return this.setState({chats: [...this.state.chats, response]});
       }
@@ -145,7 +143,9 @@ export class PersonalChat extends Component {
           containerStyle={{height: 100}}
           backgroundColor={baseColor.dark}
           leftComponent={
-            <ButtonBack onPress={() => this.props.navigation.goBack()} />
+            <ButtonBack
+              onPress={() => this.props.navigation.replace('ChatTab')}
+            />
           }
           centerContainerStyle={{backgroundColor: baseColor.dark}}
           centerComponent={

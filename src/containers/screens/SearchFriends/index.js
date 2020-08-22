@@ -2,20 +2,20 @@ import React, {Component} from 'react';
 import {
   Text,
   View,
-  StyleSheet,
   ScrollView,
   ActivityIndicator,
+  StyleSheet,
 } from 'react-native';
-import {baseColor} from '../../../styles/baseColor';
-import {baseFont} from '../../../styles/baseFont';
 import {SearchBar, Image} from 'react-native-elements';
 import {TouchableNativeFeedback} from 'react-native-gesture-handler';
+import {baseColor} from '../../../styles/baseColor';
+import {baseFont} from '../../../styles/baseFont';
 import {config} from '../../../config/baseUrl';
 
 import {connect} from 'react-redux';
-import {getAllContact} from '../../../config/redux/actions/contact';
+import {searchContact} from '../../../config/redux/actions/contact';
 
-class Friendlist extends Component {
+class SearchFriend extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -24,13 +24,32 @@ class Friendlist extends Component {
     };
   }
 
-  showAllContact = async () => {
+  //   getContact = async (q) => {
+  //     const token = this.props.auth.data.token;
+  //     await this.props
+  //       .searchContact(token, q)
+  //       .then((response) => {
+  //         console.log(response);
+  //         this.setState({
+  //           contact: response.value.data.data,
+  //         });
+  //       })
+  //       .catch((error) => {
+  //         console.log(error.response);
+  //       });
+  //   };
+
+  //   componentDidMount() {
+  //     this.getContact();
+  //   }
+
+  handleSearch = async () => {
     const token = this.props.auth.data.token;
     await this.props
-      .getAllContact(token)
+      .searchContact(token, this.state.search)
       .then((response) => {
         this.setState({
-          contact: this.props.contact.data,
+          contact: response.value.data.data,
         });
       })
       .catch((error) => {
@@ -38,19 +57,27 @@ class Friendlist extends Component {
       });
   };
 
-  handleSearch = (keyword) => {
-    this.setState({search: keyword});
-  };
-
-  componentDidMount() {
-    this.showAllContact();
-  }
-
   render() {
     return (
       <View style={styles.mainContainer}>
         <View style={styles.topContent}>
-          <Text style={styles.heading}>Contacts</Text>
+          <SearchBar
+            placeholder="Search here..."
+            onChangeText={(text) => this.setState({search: text})}
+            onBlur={this.handleSearch}
+            value={this.state.search}
+            containerStyle={{
+              backgroundColor: baseColor.dark,
+              borderBottomColor: baseColor.dark,
+              borderTopColor: baseColor.dark,
+            }}
+            inputContainerStyle={{
+              backgroundColor: baseColor.darkGrey,
+              borderRadius: 50,
+            }}
+            placeholderTextColor={baseColor.grey}
+            inputStyle={{color: baseColor.grey}}
+          />
         </View>
         <ScrollView style={styles.middleContent}>
           {this.props.contact.isLoading && (
@@ -65,6 +92,12 @@ class Friendlist extends Component {
               color={baseColor.white}
             />
           )}
+          {this.state.search !== '' ? (
+            <Text
+              style={styles.heading}>{`Result of "${this.state.search}"`}</Text>
+          ) : (
+            <Text style={styles.heading}>Search</Text>
+          )}
           {this.state.contact.map((contact) => {
             return (
               <TouchableNativeFeedback
@@ -78,11 +111,11 @@ class Friendlist extends Component {
                 style={styles.friendList}>
                 <Image
                   source={{
-                    uri: `${config.baseUrl}/images/${contact.friendImage}`,
+                    uri: `${config.baseUrl}/images/${contact.image}`,
                   }}
                   style={styles.friendPics}
                 />
-                <Text style={styles.friendsName}>{contact.friendName}</Text>
+                <Text style={styles.friendsName}>{contact.fullname}</Text>
               </TouchableNativeFeedback>
             );
           })}
@@ -132,6 +165,6 @@ const mapStateToProps = (state) => ({
   contact: state.contact,
 });
 
-const mapDispatchToProps = {getAllContact};
+const mapDispatchToProps = {searchContact};
 
-export default connect(mapStateToProps, mapDispatchToProps)(Friendlist);
+export default connect(mapStateToProps, mapDispatchToProps)(SearchFriend);

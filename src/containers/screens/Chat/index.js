@@ -45,7 +45,7 @@ class Chat extends Component {
     this.getChats();
     this.socket = io(`${config.baseUrl}`);
     this.socket.on('last-chat', (msg, id) => {
-      // console.log(id);
+      console.log(id);
       if (id === this.props.auth.data.id) {
         return this.setState({chats: msg});
       }
