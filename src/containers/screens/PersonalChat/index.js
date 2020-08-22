@@ -64,6 +64,7 @@ export class PersonalChat extends Component {
       users: [],
       chats: [],
       newMessage: '',
+      height: 0,
     };
   }
 
@@ -187,10 +188,16 @@ export class PersonalChat extends Component {
           }}>
           <Input
             placeholder="Send message"
+            multiline={true}
+            scrollEnabled={true}
             placeholderTextColor={baseColor.grey}
+            onContentSizeChange={(e) => {
+              this.setState({height: e.nativeEvent.contentSize.height});
+            }}
             inputStyle={{
               color: baseColor.white,
               fontFamily: baseFont.roboto.regular,
+              height: Math.min(120, Math.max(35, this.state.height)),
             }}
             containerStyle={{
               flex: 1,
