@@ -9,6 +9,7 @@ import { config } from '../../../config/baseUrl';
 
 import { connect } from 'react-redux';
 import { getUsersById } from '../../../config/redux/actions/users';
+import { getAllContact } from '../../../config/redux/actions/contact'
 
 class FriendProfile extends Component {
   constructor(props) {
@@ -35,32 +36,49 @@ class FriendProfile extends Component {
       });
   };
 
-  // checkFriend = () => {
+  checkFriend = async () => {
+    // console.log(this.props.contact.data)
+    // console.log(this.props.route.params.id)
+    const filtered = this.props.contact.data.filter(friend => {
+      return friend.idFriend === this.props.route.params.id;
+    });
 
-  // }
+    if (filtered) {
+      this.setState({
+        isFriend: true,
+      });
+    } else {
+      this.setState({
+        isFriend: false,
+      });
+    }
+  }
 
-  // addFriend = async () => {
+  // addFriend = async () => 
 
   // }
 
   componentDidMount() {
     this.getFriend();
-    // this.checkFriend();
+    this.checkFriend();
   }
 
   render() {
+    const { isFriend } = this.state;
     return (
       <View style={styles.container}>
         <View style={styles.topContent}>
           <Text style={styles.heading}>
             {/* Profile */}
-            <Button
-              type="clear"
-              icon={<Icon name="plus" size={15} color="white" />}
-              title="Add Friend"
-              titleStyle={styles.logout}
-              onPress={() => alert('ok')}
-            />
+            {!isFriend ? (
+              <Button
+                type="clear"
+                icon={<Icon name="plus" size={15} color="white" />}
+                title="Add Friend"
+                titleStyle={styles.logout}
+                onPress={() => alert('ok')}
+              />
+            ) : null}
           </Text>
         </View>
         <View style={styles.profile}>
