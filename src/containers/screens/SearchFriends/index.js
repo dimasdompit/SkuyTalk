@@ -48,6 +48,7 @@ class SearchFriend extends Component {
     await this.props
       .searchContact(token, this.state.search)
       .then((response) => {
+        console.log(response);
         this.setState({
           contact: response.value.data.data,
         });

@@ -9,7 +9,7 @@ import { config } from '../../../config/baseUrl';
 
 import { connect } from 'react-redux';
 import { getUsersById } from '../../../config/redux/actions/users';
-import { getAllContact } from '../../../config/redux/actions/contact'
+import { getAllContact, addContact } from '../../../config/redux/actions/contact'
 
 class FriendProfile extends Component {
   constructor(props) {
@@ -36,14 +36,14 @@ class FriendProfile extends Component {
       });
   };
 
-  checkFriend = async () => {
-    // console.log(this.props.contact.data)
-    // console.log(this.props.route.params.id)
+  checkFriend = () => {
     const filtered = this.props.contact.data.filter(friend => {
       return friend.idFriend === this.props.route.params.id;
     });
 
-    if (filtered) {
+    console.log(filtered);
+
+    if (filtered[0] !== undefined) {
       this.setState({
         isFriend: true,
       });
@@ -52,6 +52,21 @@ class FriendProfile extends Component {
         isFriend: false,
       });
     }
+  }
+
+  addFriend = async () => {
+    const token = this.props.auth.data.token;
+    const id = this.props.route.params.id;
+
+    await this.props
+      .addContact(token, id)
+      .then(async (response) => {
+        await this.props.getAllContact(token).then(() => {
+          console.log('success');
+        })
+      }).catch(error => {
+        console.log(error);
+      });
   }
 
   // addFriend = async () => 
@@ -70,15 +85,13 @@ class FriendProfile extends Component {
         <View style={styles.topContent}>
           <Text style={styles.heading}>
             {/* Profile */}
-            {!isFriend ? (
-              <Button
-                type="clear"
-                icon={<Icon name="plus" size={15} color="white" />}
-                title="Add Friend"
-                titleStyle={styles.logout}
-                onPress={() => alert('ok')}
-              />
-            ) : null}
+            {!isFriend && <Button
+              type="clear"
+              icon={<Icon name="plus" size={15} color="white" />}
+              title="Add Friend"
+              titleStyle={styles.logout}
+              onPress={this.addFriend}
+            />}
           </Text>
         </View>
         <View style={styles.profile}>
@@ -181,6 +194,6 @@ const mapStateToProps = (state) => ({
   contact: state.contact,
 });
 
-const mapDispatchToProps = { getUsersById };
+const mapDispatchToProps = { getUsersById, getAllContact, addContact };
 
 export default connect(mapStateToProps, mapDispatchToProps)(FriendProfile);

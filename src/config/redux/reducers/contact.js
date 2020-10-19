@@ -49,6 +49,26 @@ const contact = (state = initialState, action) => {
         data: action.payload.data.data,
       };
 
+    case 'ADD_CONTACT_PENDING':
+      return {
+        ...state,
+        isLoading: true,
+        isError: false,
+      };
+    case 'ADD_CONTACT_REJECTED':
+      return {
+        ...state,
+        isLoading: false,
+        isError: true,
+        errorMsg: 'Data Rejected!',
+      };
+    case 'ADD_CONTACT_FULFILLED':
+      return {
+        ...state,
+        isLoading: false,
+        isError: false,
+      };
+
     default:
       return state;
   }
