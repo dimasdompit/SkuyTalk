@@ -3,7 +3,7 @@ const initialState = {
   isError: false,
   errorMsg: '',
   data: {},
-  chat: []
+  chat: [],
 };
 
 const chat = (state = initialState, action) => {
@@ -71,7 +71,7 @@ const chat = (state = initialState, action) => {
         ...state,
         isLoading: false,
         isError: false,
-        chat: action.payload.data.data
+        chat: action.payload.data.data,
       };
 
     case 'UPDATE_CHATS_PENDING':

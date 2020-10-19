@@ -12,7 +12,7 @@ import { getUsersById } from '../../../config/redux/actions/users';
 
 class FriendProfile extends Component {
   constructor(props) {
-    super(props);
+    super();
     this.state = {
       friends: [] || this.props.users.data[0],
       isFriend: false,
