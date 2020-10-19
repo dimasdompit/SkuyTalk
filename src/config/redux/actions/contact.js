@@ -1,6 +1,6 @@
 import axios from 'axios';
 // import {API_URL} from '@env';
-import {config} from '../../baseUrl';
+import { config } from '../../baseUrl';
 
 export const getAllContact = (token) => {
   return {
@@ -30,3 +30,16 @@ export const searchContact = (token, q) => {
     }),
   };
 };
+
+export const addContact = (token, id) => {
+  return {
+    type: 'ADD_CONTACT',
+    payload: axios({
+      method: 'POST',
+      url: `${config.baseUrl}/contacts/${id}`,
+      headers: {
+        Authorization: token
+      }
+    })
+  }
+}

@@ -1,14 +1,14 @@
-import React, {Component} from 'react';
-import {Text, View, StyleSheet} from 'react-native';
-import {Image, Button} from 'react-native-elements';
+import React, { Component } from 'react';
+import { Text, View, StyleSheet } from 'react-native';
+import { Image, Button } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import {baseColor} from '../../../styles/baseColor';
-import {baseFont} from '../../../styles/baseFont';
+import { baseColor } from '../../../styles/baseColor';
+import { baseFont } from '../../../styles/baseFont';
 // import {API_URL} from '@env';
-import {config} from '../../../config/baseUrl';
+import { config } from '../../../config/baseUrl';
 
-import {connect} from 'react-redux';
-import {getUsersById} from '../../../config/redux/actions/users';
+import { connect } from 'react-redux';
+import { getUsersById } from '../../../config/redux/actions/users';
 
 class FriendProfile extends Component {
   constructor(props) {
@@ -34,6 +34,14 @@ class FriendProfile extends Component {
         console.log(error.message);
       });
   };
+
+  // checkFriend = () => {
+
+  // }
+
+  // addFriend = async () => {
+
+  // }
 
   componentDidMount() {
     this.getFriend();
@@ -82,7 +90,7 @@ class FriendProfile extends Component {
         <Button
           title="SEND MESSAGE"
           icon={<Icon name="envelope" size={20} color={baseColor.black} />}
-          buttonStyle={{marginTop: 20, backgroundColor: baseColor.purple}}
+          buttonStyle={{ marginTop: 20, backgroundColor: baseColor.purple }}
           titleStyle={{
             color: baseColor.black,
             fontFamily: baseFont.roboto.bold,
@@ -155,6 +163,6 @@ const mapStateToProps = (state) => ({
   contact: state.contact,
 });
 
-const mapDispatchToProps = {getUsersById};
+const mapDispatchToProps = { getUsersById };
 
 export default connect(mapStateToProps, mapDispatchToProps)(FriendProfile);

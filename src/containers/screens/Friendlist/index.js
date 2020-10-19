@@ -5,6 +5,7 @@ import {
   StyleSheet,
   ScrollView,
   ActivityIndicator,
+  RefreshControl,
 } from 'react-native';
 import {baseColor} from '../../../styles/baseColor';
 import {baseFont} from '../../../styles/baseFont';
@@ -21,6 +22,7 @@ class Friendlist extends Component {
     this.state = {
       search: '',
       contact: [],
+      refresh: false,
     };
   }
 
@@ -38,6 +40,13 @@ class Friendlist extends Component {
       });
   };
 
+  handleRefresh = () => {
+    this.setState({refresh: true});
+    setTimeout(() => {
+      this.setState({refresh: false});
+    }, 200);
+  };
+
   handleSearch = (keyword) => {
     this.setState({search: keyword});
   };
@@ -52,7 +61,14 @@ class Friendlist extends Component {
         <View style={styles.topContent}>
           <Text style={styles.heading}>Contacts</Text>
         </View>
-        <ScrollView style={styles.middleContent}>
+        <ScrollView
+          style={styles.middleContent}
+          refreshControl={
+            <RefreshControl
+              refreshing={this.state.refresh}
+              onRefresh={this.handleRefresh}
+            />
+          }>
           {this.props.contact.isLoading && (
             <ActivityIndicator
               style={{

@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import {
   Text,
   View,
@@ -6,14 +6,14 @@ import {
   ActivityIndicator,
   StyleSheet,
 } from 'react-native';
-import {SearchBar, Image} from 'react-native-elements';
-import {TouchableNativeFeedback} from 'react-native-gesture-handler';
-import {baseColor} from '../../../styles/baseColor';
-import {baseFont} from '../../../styles/baseFont';
-import {config} from '../../../config/baseUrl';
+import { SearchBar, Image } from 'react-native-elements';
+import { TouchableNativeFeedback } from 'react-native-gesture-handler';
+import { baseColor } from '../../../styles/baseColor';
+import { baseFont } from '../../../styles/baseFont';
+import { config } from '../../../config/baseUrl';
 
-import {connect} from 'react-redux';
-import {searchContact} from '../../../config/redux/actions/contact';
+import { connect } from 'react-redux';
+import { searchContact } from '../../../config/redux/actions/contact';
 
 class SearchFriend extends Component {
   constructor(props) {
@@ -63,8 +63,9 @@ class SearchFriend extends Component {
         <View style={styles.topContent}>
           <SearchBar
             placeholder="Search here..."
-            onChangeText={(text) => this.setState({search: text})}
+            onChangeText={(text) => this.setState({ search: text })}
             onBlur={this.handleSearch}
+            onClear={() => this.setState({ contact: [] })}
             value={this.state.search}
             containerStyle={{
               backgroundColor: baseColor.dark,
@@ -76,7 +77,7 @@ class SearchFriend extends Component {
               borderRadius: 50,
             }}
             placeholderTextColor={baseColor.grey}
-            inputStyle={{color: baseColor.grey}}
+            inputStyle={{ color: baseColor.grey }}
           />
         </View>
         <ScrollView style={styles.middleContent}>
@@ -96,14 +97,14 @@ class SearchFriend extends Component {
             <Text
               style={styles.heading}>{`Result of "${this.state.search}"`}</Text>
           ) : (
-            <Text style={styles.heading}>Search</Text>
-          )}
+              <Text style={styles.heading}>Search</Text>
+            )}
           {this.state.contact.map((contact) => {
             return (
               <TouchableNativeFeedback
                 onPress={() =>
                   this.props.navigation.navigate('FriendProfile', {
-                    id: contact.idFriend,
+                    id: contact.id,
                   })
                 }
                 onLongPress={() => alert('ok')}
@@ -115,7 +116,10 @@ class SearchFriend extends Component {
                   }}
                   style={styles.friendPics}
                 />
-                <Text style={styles.friendsName}>{contact.fullname}</Text>
+                <View style={{ flexDirection: 'column', alignSelf: 'center' }}>
+                  <Text style={styles.friendsUsername}>{contact.username}</Text>
+                  <Text style={styles.friendsName}>{contact.fullname}</Text>
+                </View>
               </TouchableNativeFeedback>
             );
           })}
@@ -150,9 +154,16 @@ const styles = StyleSheet.create({
     width: 55,
     borderRadius: 50,
   },
+  friendsUsername: {
+    marginLeft: 15,
+    color: baseColor.grey,
+    fontFamily: baseFont.roboto.regular,
+    fontSize: 14,
+    marginBottom: 2,
+    fontStyle: 'italic',
+  },
   friendsName: {
     marginLeft: 15,
-    alignSelf: 'center',
     color: baseColor.white,
     fontFamily: baseFont.roboto.bold,
     fontSize: 18,
@@ -165,6 +176,6 @@ const mapStateToProps = (state) => ({
   contact: state.contact,
 });
 
-const mapDispatchToProps = {searchContact};
+const mapDispatchToProps = { searchContact };
 
 export default connect(mapStateToProps, mapDispatchToProps)(SearchFriend);

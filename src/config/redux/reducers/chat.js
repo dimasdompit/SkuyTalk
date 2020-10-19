@@ -3,6 +3,7 @@ const initialState = {
   isError: false,
   errorMsg: '',
   data: {},
+  chat: []
 };
 
 const chat = (state = initialState, action) => {
@@ -48,7 +49,7 @@ const chat = (state = initialState, action) => {
         ...state,
         isLoading: false,
         isError: false,
-        data: action.payload.data.data,
+        chat: action.payload.data.data,
       };
 
     case 'POST_CHATS_PENDING':
@@ -66,6 +67,28 @@ const chat = (state = initialState, action) => {
         errorMsg: 'Data Rejected!',
       };
     case 'POST_CHATS_FULFILLED':
+      return {
+        ...state,
+        isLoading: false,
+        isError: false,
+        chat: action.payload.data.data
+      };
+
+    case 'UPDATE_CHATS_PENDING':
+      return {
+        ...state,
+        isLoading: true,
+        isError: false,
+        errorMsg: '',
+      };
+    case 'UPDATE_CHATS_REJECTED':
+      return {
+        ...state,
+        isLoading: false,
+        isError: true,
+        errorMsg: 'Data Rejected!',
+      };
+    case 'UPDATE_CHATS_FULFILLED':
       return {
         ...state,
         isLoading: false,

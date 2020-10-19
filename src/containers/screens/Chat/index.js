@@ -1,22 +1,25 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import {
   Text,
   View,
   StyleSheet,
   ScrollView,
   ActivityIndicator,
+  Image
 } from 'react-native';
-import {baseColor} from '../../../styles/baseColor';
-import {baseFont} from '../../../styles/baseFont';
-import {SearchBar, Image} from 'react-native-elements';
-import {TouchableNativeFeedback} from 'react-native-gesture-handler';
+import { baseColor } from '../../../styles/baseColor';
+import { baseFont } from '../../../styles/baseFont';
+import { CheckedActiveIcon, CheckedIcon } from '../../../assets'
+import { SearchBar } from 'react-native-elements';
+import { TouchableNativeFeedback } from 'react-native-gesture-handler';
 import Moment from 'react-moment';
 // import {API_URL} from '@env';
-import {config} from '../../../config/baseUrl';
+import { config } from '../../../config/baseUrl';
 import io from 'socket.io-client';
 
-import {connect} from 'react-redux';
-import {getChats} from '../../../config/redux/actions/chat';
+import { connect } from 'react-redux';
+import { getChats } from '../../../config/redux/actions/chat';
+import Icon from 'react-native-vector-icons/FontAwesome5';
 
 class Chat extends Component {
   constructor(props) {
@@ -47,7 +50,7 @@ class Chat extends Component {
     this.socket.on('last-chat', (msg, id) => {
       console.log(id);
       if (id === this.props.auth.data.id) {
-        return this.setState({chats: msg});
+        return this.setState({ chats: msg });
       }
     });
 
@@ -57,6 +60,10 @@ class Chat extends Component {
         return console.log('success!');
       }
     });
+
+    this.socket.on('read', response => {
+      return console.log(response, 'read')
+    })
   }
 
   componentWillUnmount() {
@@ -65,80 +72,81 @@ class Chat extends Component {
   }
 
   handleSearch = (search) => {
-    this.setState({search});
+    this.setState({ search });
   };
 
   render() {
     return (
-      <View style={styles.mainContainer}>
-        <View style={styles.topContent}>
-          <SearchBar
-            placeholder="Search here..."
-            onChangeText={this.handleSearch}
-            value={this.state.search}
-            containerStyle={{
-              backgroundColor: baseColor.dark,
-              borderBottomColor: baseColor.dark,
-              borderTopColor: baseColor.dark,
-            }}
-            inputContainerStyle={{
-              backgroundColor: baseColor.darkGrey,
-              borderRadius: 50,
-            }}
-            placeholderTextColor={baseColor.grey}
-            inputStyle={{color: baseColor.grey}}
-          />
-          <Text style={styles.heading}>Messages</Text>
-          <Text style={styles.notifHeading}>You have a new messages</Text>
-        </View>
-        <ScrollView style={styles.middleContent}>
-          {/* {this.props.chat.isLoading && (
-            <ActivityIndicator
-              style={{
-                flex: 1,
-                justifyContent: 'center',
-                alignSelf: 'center',
-                marginTop: 150,
+      <>
+        <View style={styles.mainContainer}>
+          <View style={styles.topContent}>
+            <SearchBar
+              placeholder="Search here..."
+              onChangeText={this.handleSearch}
+              value={this.state.search}
+              containerStyle={{
+                backgroundColor: baseColor.dark,
+                borderBottomColor: baseColor.dark,
+                borderTopColor: baseColor.dark,
               }}
-              size="large"
-              color={baseColor.white}
+              inputContainerStyle={{
+                backgroundColor: baseColor.darkGrey,
+                borderRadius: 50,
+              }}
+              placeholderTextColor={baseColor.grey}
+              inputStyle={{ color: baseColor.grey }}
             />
-          )} */}
-          {this.state.chats.map((chat) => {
-            return (
-              <TouchableNativeFeedback
-                onPress={() =>
-                  this.props.navigation.navigate('PersonalChat', {
-                    id:
-                      chat.receiver === this.props.auth.data.id
-                        ? chat.sender
-                        : chat.receiver,
-                  })
-                }
-                key={chat.id}
-                style={styles.friendsChat}>
-                <Image
-                  source={{uri: `${config.baseUrl}/images/${chat.image}`}}
-                  style={styles.friendPics}
-                />
-                <View style={styles.friendsMessage}>
-                  <Text style={styles.friendsName}>{chat.fullname}</Text>
-                  <Text style={styles.chatContent}>
-                    {chat.content.length < 31
-                      ? chat.content
-                      : `${chat.content.substr(0, 31)}...`}
-                  </Text>
-                </View>
-                <Text style={styles.chatDate}>
-                  <Moment element={Text} format="HH:mm">
-                    {chat.date}
-                  </Moment>
-                </Text>
-              </TouchableNativeFeedback>
-            );
-          })}
-        </ScrollView>
-      </View>
+            <Text style={styles.heading}>Messages</Text>
+            <Text style={styles.notifHeading}>You have a new messages</Text>
+          </View>
+          <ScrollView style={styles.middleContent}>
+            {this.state.chats.map((chat) => {
+              return (
+                <TouchableNativeFeedback
+                  onPress={() =>
+                    this.props.navigation.navigate('PersonalChat', {
+                      id:
+                        chat.receiver === this.props.auth.data.id
+                          ? chat.sender
+                          : chat.receiver,
+                    })
+                  }
+                  key={chat.id}
+                  style={styles.friendsChat}>
+                  <Image
+                    source={{ uri: `${config.baseUrl}/images/${chat.image}` }}
+                    style={styles.friendPics}
+                  />
+                  <View style={styles.friendsMessage}>
+                    <Text style={styles.friendsName}>{chat.fullname}</Text>
+                    <Text style={styles.chatContent(chat.status, chat.sender === parseInt(this.props.auth.data.id))}>
+                      {chat.content.length < 31
+                        ? chat.content
+                        : `${chat.content.substr(0, 31)}...`}
+                    </Text>
+                  </View>
+                  <View style={styles.rightTitle}>
+                    <Text style={styles.chatDate}>
+                      <Moment element={Text} format="HH:mm">
+                        {chat.date}
+                      </Moment>
+                    </Text>
+                    {chat.sender === parseInt(this.props.auth.data.id) ? (
+                      chat.status === 1 ? (
+                        <Image source={CheckedActiveIcon} />
+                      ) : (
+                          <Image source={CheckedIcon} />
+                        )
+                    ) : chat.status === 0 ? (
+                      <Icon name='exclamation-circle' color={baseColor.purple} size={17} />
+                    ) : null}
+                  </View>
+                </TouchableNativeFeedback>
+              );
+            })}
+          </ScrollView>
+        </View>
+      </>
     );
   }
 }
@@ -185,15 +193,21 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginBottom: 2,
   },
-  chatContent: {
+  chatContent: (status, mine) => ({
     width: 238,
     fontSize: 14,
-    color: baseColor.grey,
+    color: !mine && status === 0 ? baseColor.purple : baseColor.grey,
     fontFamily: baseFont.roboto.regular,
+    fontWeight: !mine && status === 0 ? 'bold' : '400',
+  }),
+  rightTitle: {
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   chatDate: {
     color: baseColor.grey,
     fontFamily: baseFont.roboto.bold,
+    marginBottom: 5
   },
 });
 
@@ -202,6 +216,6 @@ const mapStateToProps = (state) => ({
   chat: state.chat,
 });
 
-const mapDispatchToProps = {getChats};
+const mapDispatchToProps = { getChats };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Chat);

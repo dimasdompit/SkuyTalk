@@ -1,29 +1,29 @@
-import React, {Component} from 'react';
-import {Text, View, ScrollView} from 'react-native';
-import {ScaledSheet} from 'react-native-size-matters';
-import {Header, Button, Image, Input} from 'react-native-elements';
+import React, { Component } from 'react';
+import { Text, View, ScrollView } from 'react-native';
+import { ScaledSheet } from 'react-native-size-matters';
+import { Header, Button, Image, Input } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import {baseColor} from '../../../styles/baseColor';
-import {baseFont} from '../../../styles/baseFont';
-import {moderateScale} from 'react-native-size-matters';
+import { baseColor } from '../../../styles/baseColor';
+import { baseFont } from '../../../styles/baseFont';
+import { moderateScale } from 'react-native-size-matters';
 import {
   TouchableNativeFeedback,
   TouchableOpacity,
 } from 'react-native-gesture-handler';
 // import {API_URL} from '@env';
-import {config} from '../../../config/baseUrl';
+import { config } from '../../../config/baseUrl';
 import MessageBubble from '../../organism/MessageBubble';
 import io from 'socket.io-client';
 
-import {connect} from 'react-redux';
-import {getUsersById} from '../../../config/redux/actions/users';
-import {showAllChats, postChats} from '../../../config/redux/actions/chat';
+import { connect } from 'react-redux';
+import { getUsersById } from '../../../config/redux/actions/users';
+import { getChats, showAllChats, postChats, putChats } from '../../../config/redux/actions/chat';
 
 // EXTERNAL COMPONENTS
-const ButtonBack = ({onPress}) => {
+const ButtonBack = ({ onPress }) => {
   return (
     <Button
-      buttonStyle={{backgroundColor: baseColor.dark}}
+      buttonStyle={{ backgroundColor: baseColor.dark }}
       icon={<Icon name="arrow-left" size={15} color={baseColor.white} />}
       onPress={onPress}
     />
@@ -40,8 +40,8 @@ const Friends = (props) => {
         alignItems: 'center',
       }}>
       <Image
-        source={{uri: `${config.baseUrl}/images/${props.image}`}}
-        style={{height: 50, width: 50, borderRadius: 50}}
+        source={{ uri: `${config.baseUrl}/images/${props.image}` }}
+        style={{ height: 50, width: 50, borderRadius: 50 }}
       />
       <Text
         style={{
@@ -88,16 +88,23 @@ export class PersonalChat extends Component {
     const token = this.props.auth.data.token;
     const id = this.props.route.params.id;
 
-    await this.props
-      .showAllChats(token, id)
-      .then(async (response) => {
-        await this.setState({
-          chats: response.value.data.data,
-        });
+    console.log(this.props.chat)
+
+    await this.props.showAllChats(token, id)
+      .then(async res => {
+        await this.props.putChats(token, id).then(
+          async () => {
+            await this.props.getChats(token).then(async () => {
+              console.log(this.props.chat)
+              this.setState({
+                chats: this.props.chat.chat
+              })
+            })
+          }
+        )
+      }).catch(error => {
+        console.log(error)
       })
-      .catch((error) => {
-        console.log(error.response);
-      });
   };
 
   postChats = async () => {
@@ -113,7 +120,7 @@ export class PersonalChat extends Component {
       .postChats(token, id, formData)
       .then(async (response) => {
         await this.props.showAllChats(token, id);
-        await this.setState({newMessage: ''});
+        await this.setState({ newMessage: '' });
       })
       .catch((error) => console.log(error.message));
   };
@@ -125,7 +132,7 @@ export class PersonalChat extends Component {
     this.socket.on('chat', (response) => {
       let id = this.props.route.params.id;
       if (response.sender === id || response.receiver === id) {
-        return this.setState({chats: [...this.state.chats, response]});
+        return this.setState({ chats: [...this.state.chats, response] });
       }
     });
   }
@@ -137,17 +144,17 @@ export class PersonalChat extends Component {
 
   render() {
     return (
-      <View style={{flex: 1}}>
+      <View style={{ flex: 1 }}>
         <Header
           placement="left"
-          containerStyle={{height: 100}}
+          containerStyle={{ height: 100 }}
           backgroundColor={baseColor.dark}
           leftComponent={
             <ButtonBack
               onPress={() => this.props.navigation.replace('ChatTab')}
             />
           }
-          centerContainerStyle={{backgroundColor: baseColor.dark}}
+          centerContainerStyle={{ backgroundColor: baseColor.dark }}
           centerComponent={
             <Friends
               image={this.state.users.image}
@@ -162,7 +169,7 @@ export class PersonalChat extends Component {
         />
         <ScrollView
           style={styles.container}
-          contentContainerStyle={{paddingBottom: 30}}
+          contentContainerStyle={{ paddingBottom: 30 }}
           showsVerticalScrollIndicator={false}
           ref={(scroll) => {
             this.scroll = scroll;
@@ -192,7 +199,7 @@ export class PersonalChat extends Component {
             scrollEnabled={true}
             placeholderTextColor={baseColor.grey}
             onContentSizeChange={(e) => {
-              this.setState({height: e.nativeEvent.contentSize.height});
+              this.setState({ height: e.nativeEvent.contentSize.height });
             }}
             inputStyle={{
               color: baseColor.white,
@@ -204,7 +211,7 @@ export class PersonalChat extends Component {
               backgroundColor: baseColor.dark,
             }}
             value={this.state.newMessage}
-            onChangeText={(input) => this.setState({newMessage: input})}
+            onChangeText={(input) => this.setState({ newMessage: input })}
           />
           <Button
             containerStyle={{
@@ -213,7 +220,7 @@ export class PersonalChat extends Component {
               paddingRight: 10,
               backgroundColor: baseColor.dark,
             }}
-            buttonStyle={{backgroundColor: baseColor.purple}}
+            buttonStyle={{ backgroundColor: baseColor.purple }}
             icon={<Icon name="send" size={20} color="white" />}
             onPress={() => this.postChats()}
           />
@@ -289,6 +296,6 @@ const mapStateToProps = (state) => ({
   chat: state.chat,
 });
 
-const mapDispatchToProps = {getUsersById, showAllChats, postChats};
+const mapDispatchToProps = { getUsersById, showAllChats, postChats, putChats, getChats };
 
 export default connect(mapStateToProps, mapDispatchToProps)(PersonalChat);

@@ -1,13 +1,13 @@
-import React, {Component} from 'react';
-import {Text, View, StyleSheet, Image} from 'react-native';
-import {Input, CheckBox, Button} from 'react-native-elements';
-import {baseColor} from '../../../styles/baseColor';
-import {baseFont} from '../../../styles/baseFont';
+import React, { Component } from 'react';
+import { Text, View, StyleSheet, Image } from 'react-native';
+import { Input, CheckBox, Button } from 'react-native-elements';
+import { baseColor } from '../../../styles/baseColor';
+import { baseFont } from '../../../styles/baseFont';
 import Logo from '../../../assets/images/skuytalk-logo.png';
-import {showMessage} from 'react-native-flash-message';
+import { showMessage } from 'react-native-flash-message';
 
-import {connect} from 'react-redux';
-import {login} from '../../../config/redux/actions/auth';
+import { connect } from 'react-redux';
+import { login } from '../../../config/redux/actions/auth';
 
 export class Login extends Component {
   constructor(props) {
@@ -88,7 +88,7 @@ export class Login extends Component {
                 name: 'user',
                 color: baseColor.grey,
               }}
-              onChangeText={(text) => this.setState({username: text})}
+              onChangeText={(text) => this.setState({ username: text })}
             />
             <Input
               placeholder="Password"
@@ -105,7 +105,7 @@ export class Login extends Component {
                 name: 'lock',
                 color: baseColor.grey,
               }}
-              onChangeText={(text) => this.setState({password: text})}
+              onChangeText={(text) => this.setState({ password: text })}
             />
           </View>
           <View style={styles.forgot}>
@@ -129,15 +129,15 @@ export class Login extends Component {
             buttonStyle={styles.btnSign}
             titleStyle={styles.btnTitleStyles}
             onPress={this.handleLogin}
-            // loading={this.props.auth.isLoading}
+            loading={this.props.auth.isLoading}
           />
           <View style={styles.bottomContent}>
             <Text style={styles.terms}>Don't have an account? </Text>
             <Button
               title="Create new one"
               type="clear"
-              buttonStyle={{alignSelf: 'center'}}
-              titleStyle={{color: baseColor.purple}}
+              buttonStyle={{ alignSelf: 'center' }}
+              titleStyle={{ color: baseColor.purple }}
               onPress={() => this.props.navigation.replace('Register')}
             />
           </View>
@@ -227,6 +227,6 @@ const mapStateToProps = (state) => ({
   auth: state.auth,
 });
 
-const mapDispatchToProps = {login};
+const mapDispatchToProps = { login };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Login);

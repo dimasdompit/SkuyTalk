@@ -1,6 +1,6 @@
 import axios from 'axios';
 // import {API_URL_SECOND} from '@env';
-import {config} from '../../baseUrl';
+import { config } from '../../baseUrl';
 
 export const getChats = (token) => {
   return {
@@ -41,5 +41,18 @@ export const postChats = (token, id, data) => {
     }),
   };
 };
+
+export const putChats = (token, id) => {
+  return {
+    type: 'UPDATE_CHATS',
+    payload: axios({
+      method: 'PUT',
+      url: `${config.baseUrl}/chat/${id}`,
+      headers: {
+        Authorization: token,
+      }
+    })
+  }
+}
 
 // export const getChatById = token;
