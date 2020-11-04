@@ -2,6 +2,7 @@
 
 ### SkuyTalk Realtime Chat Apps with React Native, Socket.IO & Google Maps API.
 
+![](https://i.imgur.com/XdG3VeL.png)
 
 
 ## Guide to Installation
@@ -66,8 +67,6 @@ You will also see any lint errors in Metro Server.
 |    react-native-maps     |    https://github.com/react-native-maps/react-native-maps    |
 |    Socket.IO     |    https://github.com/socketio/socket.io    |
 
-https://github.com/socketio/socket.io
-
 ## Features
 
 #### Authentication
@@ -104,17 +103,23 @@ https://github.com/socketio/socket.io
 
 ## License
 
-[MIT License]()
+[MIT License](https://github.com/dimasdompit/SkuyTalk/blob/master/LICENSE)
 
 ## Screenshot
 
-#### - Login Screen -
+<p float="left">
+<img src="https://i.imgur.com/jKMeClX.jpg" data-canonical-src="https://i.imgur.com/jKMeClX.jpg" width="200" />
 
+<img src="https://i.imgur.com/uyoRBU8.jpg" data-canonical-src="https://i.imgur.com/uyoRBU8.jpg" width="200" />
 
-#### - Chat List Screen -
+<img src="https://i.imgur.com/jV63TRu.jpg" data-canonical-src="https://i.imgur.com/jV63TRu.jpg" width="200" />
 
+<img src="https://i.imgur.com/N3Z0At2.jpg" data-canonical-src="https://i.imgur.com/N3Z0At2.jpg" width="200" />
 
-#### - User Profile Screen -
+<img src="https://i.imgur.com/WxXWgAE.jpg" data-canonical-src="https://i.imgur.com/WxXWgAE.jpg" width="200" />
 
+<img src="https://i.imgur.com/oEfvFMB.jpg" data-canonical-src="https://i.imgur.com/oEfvFMB.jpg" width="200" />
 
-#### - Maps Screen -
+<img src="https://i.imgur.com/RGi9TFR.jpg" data-canonical-src="https://i.imgur.com/RGi9TFR.jpg" width="200" />
+
+</p>
