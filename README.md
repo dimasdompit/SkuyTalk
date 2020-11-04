@@ -1,6 +1,6 @@
-# DOMSLibrary (Mobile)
+# SkuyTalk
 
-### Library Mobile Apps with React Native.
+### SkuyTalk Realtime Chat Apps with React Native, Socket.IO & Google Maps API.
 
 
 
