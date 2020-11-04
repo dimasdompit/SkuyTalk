@@ -2,8 +2,9 @@
 
 ### SkuyTalk Realtime Chat Apps with React Native, Socket.IO & Google Maps API.
 
-![](https://i.imgur.com/XdG3VeL.png)
-
+<p align="center">
+  <img width="300" src="https://i.imgur.com/XdG3VeL.png">
+</p>
 
 ## Guide to Installation
 
